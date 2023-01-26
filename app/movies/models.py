@@ -18,3 +18,9 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_runtime(self):
+        return f"{self.runtime}m"
+
+    def get_year(self):
+        return self.released.year
