@@ -1,9 +1,14 @@
 from rest_framework.viewsets import ModelViewSet
 
-from ..models import Discussion
-from .serializers import DiscussionSerializer
+from ..models import Discussion, Comment
+from .serializers import DiscussionSerializer, CommentSerializer
 
 
-class DiscussionsViewSet(ModelViewSet):
+class DiscussionViewSet(ModelViewSet):
     queryset = Discussion.objects.all()
     serializer_class = DiscussionSerializer
+
+
+class CommentViewSet(ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
