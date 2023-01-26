@@ -3,8 +3,6 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from phonenumber_field.modelfields import PhoneNumberField
-
 
 class User(AbstractUser):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True)
