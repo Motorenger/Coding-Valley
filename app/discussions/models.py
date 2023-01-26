@@ -22,3 +22,17 @@ class Discussion(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+    content = models.CharField(max_length=400)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE, related_name="comments")
+
+    class Meta:
+        verbose_name = _("Comment")
+        verbose_name_plural = _("Comments")
+
+    def __str__(self):
+        return self.content[:50]
