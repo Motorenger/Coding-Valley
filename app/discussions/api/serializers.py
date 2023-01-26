@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import Discussion, Comment
+from discussions.models import Discussion, Comment
 
 
 class DiscussionSerializer(serializers.ModelSerializer):
