@@ -6,7 +6,16 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 RUN pip install --upgrade pip
-COPY requirements.txt .
+COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY ./app/ .
+RUN apt update
+RUN apt install -y netcat
+
+COPY ./app/entrypoint.sh .
+RUN sed -i 's/\r$//g' /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/entrypoint.sh
+
+COPY . .
+
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
