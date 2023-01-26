@@ -17,4 +17,10 @@ class Movie(models.Model):
         verbose_name_plural = _("Movies")
 
     def __str__(self):
-        return self.name
+        return self.title
+
+    def get_runtime(self):
+        return f"{self.runtime}m"
+
+    def get_year(self):
+        return self.released.year
