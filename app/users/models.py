@@ -24,12 +24,19 @@ class UserManager(BaseUserManager):
         return user
 
     def create_user(self, first_name, last_name, email, password, **extra_fields):
-        user = self._create_user(first_name, last_name, email, password, is_active, is_staff, is_superuser, **extra_fields)
+        user = self._create_user(
+            first_name, last_name, email, password, 
+            is_active, is_staff, is_superuser, **extra_fields
+        )
         user.save(using=self._db)
         return user
 
     def create_superuser(self, first_name, last_name, email, password, **extra_fields):
-        user = self._create_user(first_name, last_name, email, password, True, True, True, **extra_fields)
+        user = self._create_user(
+            first_name, last_name, email, password, 
+            True, True, True, **extra_fields
+        )
+        user.save(using=self._db)
         return user
 
 
