@@ -16,7 +16,7 @@ class User(AbstractUser):
     is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'email']
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def get_full_name(self) -> str:
         """Method to return user's full name"""
