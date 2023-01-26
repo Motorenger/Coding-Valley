@@ -3,19 +3,14 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 class User(AbstractUser):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    email = models.EmailField(unique=True, null=True)
-    mobile = models.CharField(
-        verbose_name=_("Mobile Number"),
-        max_length=150,
-        unique=True,
-        null=True,
-        blank=True,
-    )
+    email = models.EmailField(unique=True)
     bio = models.TextField(null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
