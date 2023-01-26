@@ -1,12 +1,10 @@
+import uuid
+
 from django.db import models
 from django.utils.translation import gettext as _
 
 
-import uuid
-
-
 class Genre(models.Model):
-
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
@@ -20,7 +18,6 @@ class Genre(models.Model):
 
 
 class Movie(models.Model):
-
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=50)
     released = models.DateField(_("Release date"))
