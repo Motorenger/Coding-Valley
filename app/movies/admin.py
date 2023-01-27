@@ -14,6 +14,5 @@ class MovieAdmin(admin.ModelAdmin):
     ]
 
 
-
 admin.site.register(Genre)
 admin.site.register(Movie, MovieAdmin)
