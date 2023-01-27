@@ -29,10 +29,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    # 3-d party
+    "rest_framework",
+
     # local
-    'users.apps.UsersConfig',
-    'movies.apps.MoviesConfig',
-    'reviews.apps.ReviewsConfig',
+    "users.apps.UsersConfig",
+    "movies.apps.MoviesConfig",
+    "reviews.apps.ReviewsConfig",
 ]
 
 MIDDLEWARE = [
