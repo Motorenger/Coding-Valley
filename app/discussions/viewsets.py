@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 
 from discussions.models import Discussion, Comment
-from discussions.api.serializers import DiscussionSerializer, CommentSerializer
+from discussions.serializers import DiscussionSerializer, CommentSerializer
 
 
 class DiscussionViewSet(ModelViewSet):

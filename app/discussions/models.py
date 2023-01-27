@@ -1,19 +1,19 @@
 import uuid
 
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 
-from users.models import User
 from movies.models import Movie
 
 
 class Discussion(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
-    title = models.CharField(max_length=100)
-    content = models.CharField(max_length=1000)
+    title = models.CharField(max_length=400)
+    content = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="discussions")
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="discussions")
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="discussions", null=True, blank=True)
 
     class Meta:
@@ -26,8 +26,8 @@ class Discussion(models.Model):
 
 class Comment(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
-    content = models.CharField(max_length=400)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    content = models.TextField()
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="comments")
     discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE, related_name="comments")
 
     class Meta:

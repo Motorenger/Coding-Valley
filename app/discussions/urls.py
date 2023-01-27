@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
-from discussions.api.viewsets import DiscussionViewSet, CommentViewSet
+from discussions.viewsets import DiscussionViewSet, CommentViewSet
 
 router = SimpleRouter()
 router.register(r'discussions', DiscussionViewSet, basename='discussions')
