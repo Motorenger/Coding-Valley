@@ -22,6 +22,7 @@ class Review(models.Model):
             MinValueValidator(1)
         ]
      )
+    likes = models.ManyToManyField(get_user_model(), through="ReviewLikes", through_fields=('review', 'user'))
 
     class Meta:
         verbose_name = _("Review")
@@ -29,3 +30,13 @@ class Review(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ReviewLikes(models.Model):
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="users_liked")
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews_liked")
+    like = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _("ReviewLikes")
+        verbose_name_plural = _("ReviewLikes")
