@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from movies.models import Movie
+from whatchlists.models import Movie
 
 
 class MovieSerializer(serializers.ModelSerializer):
