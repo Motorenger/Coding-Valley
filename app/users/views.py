@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+
 class UserTokenObtainPairView(TokenObtainPairView):
     serializer_class = UserTokenObtainPairSerializer
 
