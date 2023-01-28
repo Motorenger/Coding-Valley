@@ -25,7 +25,7 @@ INSTALLED_APPS = [
 
     # local
     'users.apps.UsersConfig',
-    'movies.apps.MoviesConfig',
+    'whatchlists.apps.WhatchlistsConfig',
     'discussions.apps.DiscussionsConfig',
     'reviews.apps.ReviewsConfig',
 ]

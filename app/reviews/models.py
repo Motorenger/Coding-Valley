@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import gettext as _
 
-from movies.models import Movie
+from whatchlists.models import Movie
 
 
 class Review(models.Model):
