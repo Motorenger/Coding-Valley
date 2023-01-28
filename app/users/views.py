@@ -21,7 +21,7 @@ class UserTokenObtainPairView(TokenObtainPairView):
 @api_view(['GET'])
 def getRoutes(request):
     routes = [
-        'register/'
+        'register/',
         'token/',
         'token/refresh/',
     ]
