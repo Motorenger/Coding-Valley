@@ -22,7 +22,7 @@ class Review(models.Model):
             MaxValueValidator(5),
             MinValueValidator(1)
         ]
-     )
+    )
     likes = models.ManyToManyField(get_user_model(), through="ReviewLikes", through_fields=('review', 'user'))
 
     class Meta:
