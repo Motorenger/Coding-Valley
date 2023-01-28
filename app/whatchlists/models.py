@@ -55,6 +55,20 @@ class Series(models.Model):
         return self.title
 
 
+class Season(models.Model):
+    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
+    season = models.PositiveIntegerField()
+    total_episodes = models.PositiveIntegerField()
+    series = models.ForeignKey(Series, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = _("Season")
+        verbose_name_plural = _("Seasons")
+
+    def __str__(self):
+        return f"{self.series} s. {self.season}"
+
+
 class Episode(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=50)
@@ -62,6 +76,7 @@ class Episode(models.Model):
     episode_num = models.PositiveIntegerField()
     runtime = models.PositiveIntegerField()
     plot = models.TextField()
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("Episode")
@@ -69,18 +84,3 @@ class Episode(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class Season(models.Model):
-    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
-    season = models.PositiveIntegerField()
-    total_episodes = models.PositiveIntegerField()
-    series = models.ForeignKey(Series, on_delete=models.CASCADE, related_name="seasons")
-    episodes = models.ManyToManyField(Episode, related_name="season")
-
-    class Meta:
-        verbose_name = _("Season")
-        verbose_name_plural = _("Seasons")
-
-    def __str__(self):
-        return self.name
