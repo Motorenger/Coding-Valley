@@ -44,8 +44,6 @@ class UserSerializerWithToken(UserSerializer):
 
     def get_access(self, obj):
         token = RefreshToken.for_user(obj)
-
-        token['id'] = obj.id
         token['first_name'] = obj.first_name
         token['last_name'] = obj.last_name
         token['email'] = obj.email
