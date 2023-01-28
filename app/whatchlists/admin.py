@@ -16,13 +16,16 @@ class MovieAdmin(admin.ModelAdmin):
         GenreInline,
     ]
 
+
 class SeasonInline(admin.TabularInline):
     model = Season
+
 
 class SeriesAdmin(admin.ModelAdmin):
     inlines = [
         SeasonInline,
     ]
+
 
 class EpisodeInline(admin.TabularInline):
     model = Episode
