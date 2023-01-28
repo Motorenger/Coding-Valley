@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from movies.models import Movie
-from movies.api.serializers import MovieSerializer
+from whatchlists.models import Movie
+from whatchlists.serializers import MovieSerializer
 
 
 class MovieViewSet(viewsets.ModelViewSet):
