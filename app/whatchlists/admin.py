@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from movies.models import Genre, Movie
+from whatchlists.models import Genre, Movie
 
 
 class GenreInline(admin.TabularInline):
