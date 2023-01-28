@@ -19,7 +19,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
 
-    # third party
+    # 3-d party
+    "rest_framework",
     'rest_framework_simplejwt.token_blacklist',
 
     # local
