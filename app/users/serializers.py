@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'first_name', 'last_name', 'email',
+            'id', 'username', 'email',
             'bio', 'is_active', 'is_staff', 'is_superuser'
         )
         read_only_fields = ('is_active' ,'is_superuser', 'is_staff')
@@ -20,8 +20,7 @@ class UserTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token['first_name'] = user.first_name
-        token['last_name'] = user.last_name
+        token['username'] = user.username
         token['email'] = user.email
         return token
 
@@ -44,12 +43,10 @@ class UserSerializerWithToken(UserSerializer):
 
     def get_access(self, obj):
         token = RefreshToken.for_user(obj)
-        token['first_name'] = obj.first_name
-        token['last_name'] = obj.last_name
+        token['username'] = obj.username
         token['email'] = obj.email
         return str(token.access_token)
     
     def get_refresh(self, obj):
         token = RefreshToken.for_user(obj)
         return str(token)
-        

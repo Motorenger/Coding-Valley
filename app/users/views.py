@@ -33,16 +33,14 @@ class RegisterView(APIView):
 
     def post(self, request):
         data = request.data
-        first_name = data.get('first_name')
-        last_name = data.get('last_name')
+        username = data.get('username')
         email = data.get('email')
         password = data.get('password')
         try:
             user = User.objects.create(
-                first_name=first_name,
-                last_name=last_name,
+                username=username,
                 email=email,
-                password=make_password(password)
+                password=password
             )
             serializer = UserSerializerWithToken(user, many=False)
         except Exception as e:
