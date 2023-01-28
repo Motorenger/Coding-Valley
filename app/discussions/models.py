@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 
-from movies.models import Movie
+from whatchlists.models import Movie, Series
 
 
 class Discussion(models.Model):
@@ -15,6 +15,7 @@ class Discussion(models.Model):
     updated = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="discussions")
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="discussions", null=True, blank=True)
+    series = models.ForeignKey(Series, on_delete=models.CASCADE, related_name="discussions", null=True, blank=True)
 
     class Meta:
         verbose_name = _("Discussion")

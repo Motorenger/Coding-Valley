@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.translation import gettext as _
 
-from movies.models import Movie
+from whatchlists.models import Movie, Series
 
 
 class Review(models.Model):
@@ -13,7 +13,8 @@ class Review(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews")
     title = models.CharField(max_length=150)
     content = models.TextField(null=True, blank=True)
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="reviews")
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="reviews", null=True, blank=True)
+    series = models.ForeignKey(Series, on_delete=models.CASCADE, related_name="reviews", null=True, blank=True)
     created = models.DateField(auto_now_add=True)
     stars = models.IntegerField(
         default=5,

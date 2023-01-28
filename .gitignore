@@ -144,3 +144,5 @@ cython_debug/
 .idea/
 
 config/
+settings_dev.py
+.flake8
