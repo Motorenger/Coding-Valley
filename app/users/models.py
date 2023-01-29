@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.utils.translation import gettext as _
 
 
 class UserManager(BaseUserManager):
@@ -54,7 +55,10 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+    
+    class Meta:
+        verbose_name = _('User')
+        verbose_name_plural = _('Users')
 
-    def get_full_name(self) -> str:
-        """Method to return user's full name"""
-        return str(self.username)
+    def get_username(self):
+        return self.username
