@@ -1,12 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
 from rest_framework.decorators import api_view
-<<<<<<< HEAD
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView
-
-from users.serializers import UserTokenObtainPairSerializer
-=======
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -18,7 +13,6 @@ from users.serializers import (
     UserTokenObtainPairSerializer,
     UserSerializerWithToken
 )
->>>>>>> e469f3cfa96bb54044eb089f61b7c2712f664475
 
 
 class UserTokenObtainPairView(TokenObtainPairView):
@@ -33,8 +27,6 @@ def getRoutes(request):
         'token/refresh/',
     ]
     return Response(routes)
-<<<<<<< HEAD
-=======
 
 
 class RegisterView(APIView):
@@ -55,4 +47,3 @@ class RegisterView(APIView):
         except Exception as e:
             return Response({'detail':f'{e}'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.data)
->>>>>>> e469f3cfa96bb54044eb089f61b7c2712f664475
