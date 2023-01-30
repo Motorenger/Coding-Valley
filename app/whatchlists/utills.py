@@ -16,11 +16,11 @@ def get_omdb_by_omdbid(omdb_id: str):
     return data
 
 
-def save_to_db(data: dict):
+def save_to_db_or_get(data: dict):
     '''Function takes data returned by imdb,
        distinguishes wheter it is movie of series,
-       than saves it to the database and return
-       created instance
+       than saves it to the database if it is not saved yet
+       returns instance
     '''
 
     # subfunction to save movie
@@ -30,7 +30,7 @@ def save_to_db(data: dict):
         needed_data['title'] = movie['Title']
 
         # converting date format
-        released = datetime.strptime(movie['Released'], '%d %b %Y')
+        released = datetime.strptime(movie['Released'], '%d %b %Y').date()
         needed_data['released'] = released
 
         # editing runtime field
@@ -41,6 +41,7 @@ def save_to_db(data: dict):
         # initiation of the movie instance and saving
         movie = Movie(**needed_data)
         movie.save()
+    
         return movie
 
     # subfunction to save series
@@ -51,7 +52,13 @@ def save_to_db(data: dict):
     data_type = data.get('Type', None)
     if data_type:
         if data_type == 'movie':
-            movie = save_movie(data)
+
+            # checking for existing movie
+            try:
+                movie = Movie.objects.get(omdb_id=data["imdbID"])
+            except Movie.DoesNotExist:
+                movie = save_movie(data)
+
             return movie
 
         elif data_type == 'series':

@@ -2,9 +2,11 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from django.shortcuts import get_object_or_404
+
 from whatchlists.models import Movie
 from whatchlists.serializers import MovieSerializer
-from whatchlists.utills import get_omdb_by_search, get_omdb_by_omdbid, save_to_db
+from whatchlists.utills import get_omdb_by_search, get_omdb_by_omdbid, save_to_db_or_get
 
 
 class MovieViewSet(viewsets.ModelViewSet):
@@ -25,6 +27,7 @@ def search_by_omdbid_test_view(request):
     omdb_id = request.query_params['omdb_id']
     search_results = get_omdb_by_omdbid(omdb_id)
 
-    # saving data to db
-    object_ = save_to_db(search_results)
-    return Response(object_)
+    data = save_to_db_or_get(search_results)
+    serializer = MovieSerializer(data)
+
+    return Response(serializer.data)
