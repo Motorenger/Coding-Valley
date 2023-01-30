@@ -36,12 +36,12 @@ def save_to_db_or_get(data: dict):
         # editing runtime field
         needed_data['runtime'] = movie['Runtime'].split(' ')[0]
 
-        needed_data['omdb_id'] = movie['imdbID']
+        needed_data['imdb_id'] = movie['imdbID']
 
         # initiation of the movie instance and saving
         movie = Movie(**needed_data)
         movie.save()
-    
+
         return movie
 
     # subfunction to save series
@@ -55,7 +55,7 @@ def save_to_db_or_get(data: dict):
 
             # checking for existing movie
             try:
-                movie = Movie.objects.get(omdb_id=data["imdbID"])
+                movie = Movie.objects.get(imdb_id=data["imdbID"])
             except Movie.DoesNotExist:
                 movie = save_movie(data)
 
