@@ -3,7 +3,7 @@ from datetime import datetime
 
 import requests
 
-from whatchlists.models import Movie
+from whatchlists.models import Movie, Series
 
 
 def get_omdb_by_search(search: str) -> dict:
@@ -46,7 +46,24 @@ def save_to_db_or_get(data: dict):
 
     # subfunction to save series
     def save_series(series):
-        pass
+        # extracting only info needed for movie model
+        needed_data = {}
+        needed_data['title'] = series['Title']
+        needed_data['year'] = series['Year']
+
+        # converting date format
+        released = datetime.strptime(series['Released'], '%d %b %Y').date()
+        needed_data['released'] = released
+
+        needed_data['plot'] = series['Plot']
+        needed_data['total_seasons'] = series['totalSeasons']
+        needed_data['imdb_id'] = series['imdbID']
+
+        # initiation of the movie instance and saving
+        series = Series(**needed_data)
+        series.save()
+
+        return movie
 
     # sorting by type (movie or series)
     data_type = data.get('Type', None)
@@ -62,6 +79,6 @@ def save_to_db_or_get(data: dict):
             return movie
 
         elif data_type == 'series':
-            pass
+            return data
 
     return None

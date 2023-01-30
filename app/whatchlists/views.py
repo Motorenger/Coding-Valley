@@ -2,7 +2,6 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-
 from whatchlists.models import Movie
 from whatchlists.serializers import MovieSerializer
 from whatchlists.utills import get_omdb_by_search, get_omdb_by_omdbid, save_to_db_or_get
@@ -27,6 +26,7 @@ def search_by_omdbid_test_view(request):
     search_results = get_omdb_by_omdbid(omdb_id)
 
     data = save_to_db_or_get(search_results)
+    return Response(data)
     serializer = MovieSerializer(data)
 
     return Response(serializer.data)
