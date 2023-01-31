@@ -11,8 +11,14 @@ class DiscussionViewSet(ModelViewSet):
     serializer_class = DiscussionSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrIsAdminOrReadOnly]
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrIsAdminOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
