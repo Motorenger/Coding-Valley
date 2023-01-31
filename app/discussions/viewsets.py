@@ -3,7 +3,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from discussions.models import Discussion, Comment
 from discussions.serializers import DiscussionSerializer, CommentSerializer
-from discussions.permissions import IsOwnerOrIsAdminOrReadOnly
+from users.permissions import IsOwnerOrIsAdminOrReadOnly
+
 
 
 class DiscussionViewSet(ModelViewSet):

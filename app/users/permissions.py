@@ -11,3 +11,15 @@ class IsOwnerOrSuperuser(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return obj.user == request.user or self._is_superuser(request)
+
+
+class IsOwnerOrIsAdminOrReadOnly(permissions.BasePermission):
+    """Allow to the object be updated or deleted either owner or admin.
+    
+    Other users can only read the object.
+    """
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return request.user == obj.user or request.user.is_superuser
