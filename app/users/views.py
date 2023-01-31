@@ -41,7 +41,7 @@ class RegisterView(APIView):
             user = User.objects.create(
                 username=username,
                 email=email,
-                password=password
+                password=make_password(password)
             )
             serializer = UserSerializerWithToken(user, many=False)
         except Exception as e:
