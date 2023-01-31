@@ -23,7 +23,7 @@ class Movie(models.Model):
     released = models.DateField(_("Release date"))
     runtime = models.PositiveIntegerField()
     genres = models.ManyToManyField(Genre, related_name="movies")
-    omdb_id = models.CharField(max_length=50)
+    imdb_id = models.CharField(max_length=50)
 
     class Meta:
         verbose_name = _("Movie")
@@ -47,7 +47,7 @@ class Series(models.Model):
     genres = models.ManyToManyField(Genre, related_name="series")
     plot = models.TextField()
     total_seasons = models.PositiveIntegerField()
-    omdb_id = models.CharField(max_length=50)
+    imdb_id = models.CharField(max_length=50)
 
     class Meta:
         verbose_name = _("Series")
