@@ -4,7 +4,7 @@ from rest_framework import permissions
 class IsOwnerOrSuperuser(permissions.BasePermission):
     @staticmethod
     def _is_superuser(request):
-        return request.user.is_superuser 
+        return request.user.is_superuser
 
     def has_permission(self, request, view):
         return request.user
