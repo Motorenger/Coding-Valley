@@ -10,7 +10,7 @@ class DiscussionViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-    
+
 
 class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.all()
