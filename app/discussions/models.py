@@ -13,7 +13,7 @@ class Discussion(models.Model):
     content = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="discussions")
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="discussions", editable=False)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="discussions", null=True, blank=True)
     series = models.ForeignKey(Series, on_delete=models.CASCADE, related_name="discussions", null=True, blank=True)
 
