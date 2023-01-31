@@ -68,7 +68,7 @@ class Season(models.Model):
         verbose_name_plural = _("Seasons")
 
     def __str__(self):
-        return f"{self.series} s. {self.season}"
+        return f"{self.series} s. {self.season_numb}"
 
 
 class Episode(models.Model):
