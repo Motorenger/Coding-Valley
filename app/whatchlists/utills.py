@@ -88,9 +88,9 @@ def save_to_db_or_get(data: dict):
             needed_data['total_episodes'] = 0
 
             season = Season(series=series, **needed_data)
-            season.save()
 
             # iterating through episodes
+            episodes = []
             for e in season_data["Episodes"]:
                 episode_data = get_episode_by_omdbid(e["imdbID"])
                 if not episode_data["Response"]:
@@ -109,9 +109,11 @@ def save_to_db_or_get(data: dict):
                 needed_data['plot'] = episode_data['Plot']
 
                 episode = Episode(season=season, **needed_data)
-                episode.save()
-                season.total_episodes += 1
-                season.save()
+                episodes.append(episode)
+
+            season.total_episodes += len(episodes)
+            season.save()
+            Episode.objects.bulk_create(episodes)
         return series
 
     # sorting by type (movie or series)
@@ -130,7 +132,7 @@ def save_to_db_or_get(data: dict):
         elif data_type == 'series':
             try:
                 series = Series.objects.get(imdb_id=data["imdbID"])
-            except Movie.DoesNotExist:
+            except Series.DoesNotExist:
                 series = save_series(data)
             return series, "series"
     return None

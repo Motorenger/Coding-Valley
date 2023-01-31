@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from whatchlists.models import Movie
-from whatchlists.serializers import MovieSerializer
+from whatchlists.serializers import MovieSerializer, SeriesSerializer
 from whatchlists.utills import get_omdb_by_search, get_omdb_by_omdbid, save_to_db_or_get
 
 
