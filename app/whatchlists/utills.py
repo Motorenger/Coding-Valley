@@ -84,7 +84,7 @@ def save_to_db_or_get(data: dict):
 
             # extracting only info needed for season model
             needed_data = {}
-            needed_data['season'] = season_data['Season']
+            needed_data['season_numb'] = season_data['Season']
             needed_data['total_episodes'] = 0
 
             season = Season(series=series, **needed_data)
@@ -103,7 +103,7 @@ def save_to_db_or_get(data: dict):
                 released = datetime.strptime(series_data['Released'], '%d %b %Y').date()
                 needed_data['released'] = released
 
-                needed_data['episode_num'] = episode_data['Episode']
+                needed_data['episode_numb'] = episode_data['Episode']
                 # editing runtime field
                 needed_data['runtime'] = episode_data['Runtime'].split(" ")[0]
                 needed_data['plot'] = episode_data['Plot']
