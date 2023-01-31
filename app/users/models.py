@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext as _
 
+from whatchlists.models import Movie, Series
+
 
 class UserManager(BaseUserManager):
     def _create_user(self, username, email, password, is_active, is_staff, is_superuser, **extra_fields):
@@ -50,6 +52,9 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+
+    favourite_movies = models.ManyToManyField(Movie, related_name="users", null=True, blank=True)
+    favourite_series = models.ManyToManyField(Series, related_name="users", null=True, blank=True)
 
     objects = UserManager()
 
