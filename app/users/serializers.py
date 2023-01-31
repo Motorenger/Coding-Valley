@@ -46,7 +46,7 @@ class UserSerializerWithToken(UserSerializer):
         token['username'] = obj.username
         token['email'] = obj.email
         return str(token.access_token)
-    
+
     def get_refresh(self, obj):
         token = RefreshToken.for_user(obj)
         return str(token)

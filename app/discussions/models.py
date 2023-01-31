@@ -13,7 +13,7 @@ class Discussion(models.Model):
     content = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="discussions")
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="discussions", editable=False)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="discussions", null=True, blank=True)
     series = models.ForeignKey(Series, on_delete=models.CASCADE, related_name="discussions", null=True, blank=True)
 
@@ -28,7 +28,7 @@ class Discussion(models.Model):
 class Comment(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     content = models.TextField()
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="comments")
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="comments", editable=False)
     discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE, related_name="comments")
 
     class Meta:
