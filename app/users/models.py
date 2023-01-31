@@ -27,15 +27,15 @@ class UserManager(BaseUserManager):
 
     def create_user(self, username, email, password, **extra_fields):
         user = self._create_user(
-            username, email, password, 
-            is_active, is_staff, is_superuser, **extra_fields
+            username, email, password,
+            True, False, False, **extra_fields
         )
         user.save(using=self._db)
         return user
 
     def create_superuser(self, username, email, password, **extra_fields):
         user = self._create_user(
-            username, email, password, 
+            username, email, password,
             True, True, True, **extra_fields
         )
         user.save(using=self._db)
@@ -60,7 +60,7 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
-    
+
     class Meta:
         verbose_name = _('User')
         verbose_name_plural = _('Users')
