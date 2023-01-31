@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     # 3-rd party
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
-    # "corsheaders",                                         # It does't work
+    "corsheaders",
 
     # local
     "users.apps.UsersConfig",
@@ -40,7 +40,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     
     # 3-rd party
-    # "corsheaders.middleware.CorsMiddleware",               # It does't work
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "base.urls"
@@ -147,4 +147,4 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
 
-CORS_ALLOWED_ORIGINS = os.environ.get("ALLOWED_HOSTS").split(" ")
+CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS").split(" ")
