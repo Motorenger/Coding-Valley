@@ -1,17 +1,15 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from users.models import User
 from users.serializers import (
-    UserTokenObtainPairSerializer,
-    UserSerializerWithToken
+    UserSerializerWithToken,
+    UserTokenObtainPairSerializer
 )
 
 
@@ -45,5 +43,5 @@ class RegisterView(APIView):
             )
             serializer = UserSerializerWithToken(user, many=False)
         except Exception as e:
-            return Response({'detail':f'{e}'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': f'{e}'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.data)
