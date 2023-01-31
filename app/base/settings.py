@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     # 3-rd party
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
-    "corsheaders",
+    # "corsheaders",                                         # It does't work
 
     # local
     "users.apps.UsersConfig",
@@ -40,7 +40,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     
     # 3-rd party
-    "corsheaders.middleware.CorsMiddleware",
+    # "corsheaders.middleware.CorsMiddleware",               # It does't work
 ]
 
 ROOT_URLCONF = "base.urls"
