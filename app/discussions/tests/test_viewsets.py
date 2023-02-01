@@ -125,3 +125,14 @@ class TestDiscussionViewSet:
         # THEN
         assert response.status_code == 200, "Status code of response must be 200"
         assert response.json().get('title') == 'new title', "The response object must contain 'new title'"
+
+    # PARTIAL UPDATE
+    def test_partial_update_with_unauthenticated_user(self, api_client):
+        # GIVEN
+        partial_discussion = {'title': 'new title'}
+        discussion = baker.make("discussions.Discussion")
+        # WHEN
+        response = api_client.patch(reverse("discussions_app:discussions-detail", args=(discussion.id,)), partial_discussion)
+        # THEN
+        assert response.status_code == 401, "Status code of response must be 401"
+        assert response.json().get('title') != 'new title', "The response object must not contain 'new title'"
