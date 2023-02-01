@@ -32,3 +32,13 @@ class TestDiscussionViewSet:
         # THEN
         assert response.status_code == 200, "Status code of response must be 200"
         assert len(response.json()) == 1, "The response must contain one discussion"
+
+    # RETRIEVE
+    def test_retrieve_with_unauthenticated_user(self, api_client):
+        # GIVEN
+        discussion = baker.make("discussions.Discussion")
+        # WHEN
+        response = api_client.get(reverse("discussions_app:discussions-detail", args=(discussion.id,)))
+        # THEN
+        assert response.status_code == 200, "Status code of response must be 200"
+        assert response.json().get('id') == str(discussion.id),  "The response must contain id of the given discussion"
