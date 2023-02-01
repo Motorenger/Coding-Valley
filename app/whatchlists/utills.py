@@ -123,20 +123,19 @@ def save_to_db_or_get(data: dict):
 
     # sorting by type (movie or series)
     data_type = data.get('Type', None)
-    if data_type:
-        if data_type == 'movie':
-            # checking for existing movie
-            try:
-                movie = Movie.objects.get(imdb_id=data["imdbID"])
-            except Movie.DoesNotExist:
-                movie = save_movie(data), "movie"
 
-            return movie
-        elif data_type == 'series':
-            try:
-                series = Series.objects.get(imdb_id=data["imdbID"])
-            except Series.DoesNotExist:
-                series = save_series(data)
+    if data_type == 'movie':
+        # checking for existing movie
+        try:
+            movie = Movie.objects.get(imdb_id=data["imdbID"])
+        except Movie.DoesNotExist:
+            movie = save_movie(data), "movie"
 
-            return series, "series"
-    return None
+        return movie
+    elif data_type == 'series':
+        try:
+            series = Series.objects.get(imdb_id=data["imdbID"])
+        except Series.DoesNotExist:
+            series = save_series(data)
+
+        return series, "series"
