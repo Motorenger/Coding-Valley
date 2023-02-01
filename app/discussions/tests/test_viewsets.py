@@ -13,3 +13,12 @@ class TestDiscussionViewSet:
         # THEN
         assert response.status_code == 200, "Status code of response must be 200"
         assert len(response.json()) == 0, "The response must contain no discussions"
+
+    def test_list_with_unauthenticated_user(self, api_client):
+        # GIVEN
+        baker.make("discussions.Discussion")
+        # WHEN
+        response = api_client.get(reverse("discussions_app:discussions-list"))
+        # THEN
+        assert response.status_code == 200, "Status code of response must be 200"
+        assert len(response.json()) == 1, "The response must contain one discussion"
