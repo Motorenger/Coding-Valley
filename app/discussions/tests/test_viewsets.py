@@ -186,3 +186,16 @@ class TestDiscussionViewSet:
         # THEN
         assert delete_response.status_code == 401, "Status code of response must be 401"
         assert len(get_response.json()) == 1, "The response must contain one discussion"
+
+    def test_destroy_with_not_owner(self, api_client, owner, not_owner):
+        # GIVEN
+        discussion = baker.prepare("discussions.Discussion")
+        discussion.user = owner
+        discussion.save()
+        api_client.force_authenticate(user=not_owner)
+        # WHEN
+        delete_response = api_client.delete(reverse("discussions_app:discussions-detail", args=(discussion.id,)))
+        get_response = api_client.get(reverse("discussions_app:discussions-list"))
+        # THEN
+        assert delete_response.status_code == 403, "Status code of response must be 403"
+        assert len(get_response.json()) == 1, "The response must contain one discussion"
