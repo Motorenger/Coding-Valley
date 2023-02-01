@@ -86,3 +86,16 @@ class TestDiscussionViewSet:
         # THEN
         assert response.status_code == 401, "Status code of response must be 401"
         assert response.json().get('title') != 'new title', "The response object must not contain 'new title'"
+
+    def test_update_with_not_owner(self, api_client, owner, not_owner):
+        # GIVEN
+        new_discussion = {'title': 'new title', 'content': 'new content'}
+        discussion = baker.prepare("discussions.Discussion")
+        discussion.user = owner
+        discussion.save()
+        api_client.force_authenticate(user=not_owner)
+        # WHEN
+        response = api_client.put(reverse("discussions_app:discussions-detail", args=(discussion.id,)), new_discussion)
+        # THEN
+        assert response.status_code == 403, "Status code of response must be 403"
+        assert response.json().get('title') != 'new title', "The response object must not contain 'new title'"
