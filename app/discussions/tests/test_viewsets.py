@@ -52,3 +52,14 @@ class TestDiscussionViewSet:
         # THEN
         assert response.status_code == 200, "Status code of response must be 200"
         assert response.json().get('id') == str(discussion.id),  "The response must contain id of the given discussion"
+
+    # CREATE
+    def test_create_with_unauthenticated_user(self, api_client):
+        # GIVEN
+        discussion = {'title': 'some title', 'content': 'some content'}
+        # WHEN
+        post_response = api_client.post(reverse("discussions_app:discussions-list"), discussion)
+        get_response = api_client.get(reverse("discussions_app:discussions-list"))
+        # THEN
+        assert post_response.status_code == 401, "Status code of response must be 401"
+        assert len(get_response.json()) == 0, "The response must contain no discussions"
