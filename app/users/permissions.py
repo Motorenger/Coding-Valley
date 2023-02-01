@@ -15,7 +15,7 @@ class IsOwnerOrSuperuser(permissions.BasePermission):
 
 class IsOwnerOrIsAdminOrReadOnly(permissions.BasePermission):
     """Allow to the object be updated or deleted either owner or admin.
-    
+
     Other users can only read the object.
     """
     def has_object_permission(self, request, view, obj):

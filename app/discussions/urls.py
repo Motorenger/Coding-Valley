@@ -7,7 +7,7 @@ router = SimpleRouter()
 router.register(r'discussions', DiscussionViewSet, basename='discussions')
 router.register(r'comments', CommentViewSet, basename='comments')
 
-app_name = "discussions"
+app_name = "discussions_app"
 
 urlpatterns = [
     path('', include(router.urls)),
