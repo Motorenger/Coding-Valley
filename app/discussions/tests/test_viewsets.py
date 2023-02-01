@@ -162,3 +162,16 @@ class TestDiscussionViewSet:
         # THEN
         assert response.status_code == 200, "Status code of response must be 200"
         assert response.json().get('title') == 'new title', "The response object must contain 'new title'"
+
+    def test_partial_update_with_admin(self, api_client, owner, admin):
+        # GIVEN
+        partial_discussion = {'title': 'new title'}
+        discussion = baker.prepare("discussions.Discussion")
+        discussion.user = owner
+        discussion.save()
+        api_client.force_authenticate(user=admin)
+        # WHEN
+        response = api_client.put(reverse("discussions_app:discussions-detail", args=(discussion.id,)), partial_discussion)
+        # THEN
+        assert response.status_code == 200, "Status code of response must be 200"
+        assert response.json().get('title') == 'new title', "The response object must contain 'new title'"
