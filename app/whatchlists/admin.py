@@ -1,20 +1,9 @@
 from django.contrib import admin
 
-from whatchlists.models import (Genre, Movie,
+from whatchlists.models import (Movie,
                                 Series, Season,
                                 Episode
                                 )
-
-
-class GenreInline(admin.TabularInline):
-    model = Movie.genres.through
-
-
-class MovieAdmin(admin.ModelAdmin):
-    exclude = ('genres',)
-    inlines = [
-        GenreInline,
-    ]
 
 
 class SeasonInline(admin.TabularInline):
@@ -37,8 +26,7 @@ class SeasonAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Genre)
-admin.site.register(Movie, MovieAdmin)
+admin.site.register(Movie)
 admin.site.register(Episode)
 admin.site.register(Season, SeasonAdmin)
 admin.site.register(Series, SeriesAdmin)
