@@ -63,3 +63,15 @@ class TestDiscussionViewSet:
         # THEN
         assert post_response.status_code == 401, "Status code of response must be 401"
         assert len(get_response.json()) == 0, "The response must contain no discussions"
+
+    def test_create_with_authenticated_user(self, api_client, user):
+        # GIVEN
+        discussion = {'title': 'some title', 'content': 'some content'}
+        api_client.force_authenticate(user=user)
+        # WHEN
+        post_response = api_client.post(reverse("discussions_app:discussions-list"), discussion)
+        get_response = api_client.get(reverse("discussions_app:discussions-list"))
+        # THEN
+        assert post_response.status_code == 201, "Status code of response must be 201"
+        assert post_response.json().get('user') == str(user.id), "The response object must belong to the given user"
+        assert len(get_response.json()) == 1, "The response must contain one discussion"
