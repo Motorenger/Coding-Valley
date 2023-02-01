@@ -175,3 +175,14 @@ class TestDiscussionViewSet:
         # THEN
         assert response.status_code == 200, "Status code of response must be 200"
         assert response.json().get('title') == 'new title', "The response object must contain 'new title'"
+
+    # DESTROY
+    def test_destroy_with_unauthenticated_user(self, api_client):
+        # GIVEN
+        discussion = baker.make("discussions.Discussion")
+        # WHEN
+        delete_response = api_client.delete(reverse("discussions_app:discussions-detail", args=(discussion.id,)))
+        get_response = api_client.get(reverse("discussions_app:discussions-list"))
+        # THEN
+        assert delete_response.status_code == 401, "Status code of response must be 401"
+        assert len(get_response.json()) == 1, "The response must contain one discussion"
