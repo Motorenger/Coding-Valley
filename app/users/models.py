@@ -52,9 +52,12 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    
+    first_name = None
+    last_name = None
 
-    favourite_movies = models.ManyToManyField(Movie, related_name="users", null=True, blank=True)
-    favourite_series = models.ManyToManyField(Series, related_name="users", null=True, blank=True)
+    favourite_movies = models.ManyToManyField(Movie, related_name="users")
+    favourite_series = models.ManyToManyField(Series, related_name="users")
 
     objects = UserManager()
 
