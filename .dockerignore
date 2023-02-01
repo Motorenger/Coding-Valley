@@ -1,7 +1,11 @@
 venv
-.gitingnore
-.flake8
 Dockerfile
-docker-compose.yml
+docker-compose.yaml
 README.md
 config
+__pycache__
+.git
+.gitignore
+.dockerignore
+.pytest_cache
+.flake8
