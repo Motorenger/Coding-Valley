@@ -212,3 +212,16 @@ class TestDiscussionViewSet:
         # THEN
         assert delete_response.status_code == 204, "Status code of response must be 204"
         assert len(get_response.json()) == 0, "The response must contain no discussions"
+
+    def test_destroy_with_admin(self, api_client, owner, admin):
+        # GIVEN
+        discussion = baker.prepare("discussions.Discussion")
+        discussion.user = owner
+        discussion.save()
+        api_client.force_authenticate(user=admin)
+        # WHEN
+        delete_response = api_client.delete(reverse("discussions_app:discussions-detail", args=(discussion.id,)))
+        get_response = api_client.get(reverse("discussions_app:discussions-list"))
+        # THEN
+        assert delete_response.status_code == 204, "Status code of response must be 204"
+        assert len(get_response.json()) == 0, "The response must contain no discussions"
