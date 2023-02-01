@@ -4,3 +4,5 @@ djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
 requests==2.28.2
 django-cors-headers==3.13.0
+pytest-django==4.5.2
+model-bakery==1.10.1
