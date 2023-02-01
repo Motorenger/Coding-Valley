@@ -4,25 +4,12 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 
-class Genre(models.Model):
-    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=100)
-    description = models.TextField(null=True, blank=True)
-
-    class Meta:
-        verbose_name = _("Genre")
-        verbose_name_plural = _("Genres")
-
-    def __str__(self):
-        return self.title
-
-
 class Movie(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=50)
     released = models.DateField(_("Release date"))
     runtime = models.PositiveIntegerField()
-    genres = models.ManyToManyField(Genre, related_name="movies")
+    genres = models.CharField(max_length=255)
     imdb_id = models.CharField(max_length=50)
 
     class Meta:
@@ -44,7 +31,7 @@ class Series(models.Model):
     title = models.CharField(max_length=50)
     year = models.CharField(max_length=9, help_text="Use such format: 2018-2022")
     released = models.DateField(_("Release date"))
-    genres = models.ManyToManyField(Genre, related_name="series")
+    genres = models.CharField(max_length=255)
     plot = models.TextField()
     total_seasons = models.PositiveIntegerField()
     imdb_id = models.CharField(max_length=50)
