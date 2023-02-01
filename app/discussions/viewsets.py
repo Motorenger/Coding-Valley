@@ -6,7 +6,6 @@ from discussions.serializers import DiscussionSerializer, CommentSerializer
 from users.permissions import IsOwnerOrIsAdminOrReadOnly
 
 
-
 class DiscussionViewSet(ModelViewSet):
     queryset = Discussion.objects.all()
     serializer_class = DiscussionSerializer
