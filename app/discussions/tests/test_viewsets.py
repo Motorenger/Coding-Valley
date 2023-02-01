@@ -75,3 +75,14 @@ class TestDiscussionViewSet:
         assert post_response.status_code == 201, "Status code of response must be 201"
         assert post_response.json().get('user') == str(user.id), "The response object must belong to the given user"
         assert len(get_response.json()) == 1, "The response must contain one discussion"
+
+    # UPDATE
+    def test_update_with_unauthenticated_user(self, api_client):
+        # GIVEN
+        new_discussion = {'title': 'new title', 'content': 'new content'}
+        discussion = baker.make("discussions.Discussion")
+        # WHEN
+        response = api_client.put(reverse("discussions_app:discussions-detail", args=(discussion.id,)), new_discussion)
+        # THEN
+        assert response.status_code == 401, "Status code of response must be 401"
+        assert response.json().get('title') != 'new title', "The response object must not contain 'new title'"
