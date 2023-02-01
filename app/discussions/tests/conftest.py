@@ -47,5 +47,4 @@ def admin():
         is_staff=True,
         is_superuser=True
     )
-    admin.save()
     return admin

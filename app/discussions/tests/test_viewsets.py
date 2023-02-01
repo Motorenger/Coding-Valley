@@ -1,10 +1,10 @@
 import pytest
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 from model_bakery import baker
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
 class TestDiscussionViewSet:
     # LIST
     def test_list_with_unauthenticated_user_with_no_discussions(self, api_client):
