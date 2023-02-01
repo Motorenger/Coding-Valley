@@ -56,8 +56,8 @@ class User(AbstractUser):
     first_name = None
     last_name = None
 
-    favourite_movies = models.ManyToManyField(Movie, related_name="users")
-    favourite_series = models.ManyToManyField(Series, related_name="users")
+    favourite_movies = models.ManyToManyField(Movie, related_name="users", blank=True)
+    favourite_series = models.ManyToManyField(Series, related_name="users", blank=True)
 
     objects = UserManager()
 
