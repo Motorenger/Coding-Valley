@@ -21,8 +21,8 @@ def get_season_by_omdbid(series_omdb_id: str, season_numb: int) -> dict:
     return season
 
 
-def get_episode_by_omdbid(episode_omdb_id: str) -> dict:
-    episode = requests.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={episode_omdb_id}").json()
+def get_episode_by_omdbid(episode_omdb_id: str, session) -> dict:
+    episode = session.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={episode_omdb_id}").json()
     return episode
 
 
@@ -85,8 +85,9 @@ def save_series(series_data):
 
         # iterating through episodes
         episodes = []
+        session = requests.Session()
         for e in season_data["Episodes"]:
-            episode_data = get_episode_by_omdbid(e["imdbID"])
+            episode_data = get_episode_by_omdbid(e["imdbID"], session)
             if not episode_data["Response"]:
                 break
             # extracting only info needed for series model
