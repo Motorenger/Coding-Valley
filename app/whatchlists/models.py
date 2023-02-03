@@ -50,7 +50,7 @@ class Season(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     season_numb = models.PositiveIntegerField()
     total_episodes = models.PositiveIntegerField()
-    series = models.ForeignKey(Series, on_delete=models.CASCADE)
+    series = models.ForeignKey(Series, on_delete=models.CASCADE, related_name="seasons")
 
     class Meta:
         verbose_name = _("Season")
@@ -68,7 +68,7 @@ class Episode(models.Model):
     episode_numb = models.PositiveIntegerField()
     runtime = models.PositiveIntegerField()
     plot = models.TextField()
-    season = models.ForeignKey(Season, on_delete=models.CASCADE)
+    season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name="episodes")
     imdb_rating = models.FloatField(null=True, blank=True)
 
     class Meta:
