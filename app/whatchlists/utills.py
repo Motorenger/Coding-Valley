@@ -16,8 +16,8 @@ def get_omdb_by_omdbid(omdb_id: str):
     return data
 
 
-def get_season_by_omdbid(series_omdb_id: str, season_numb: int) -> dict:
-    season = requests.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={series_omdb_id}&Season={season_numb}").json()
+def get_season_by_omdbid(series_omdb_id: str, season_numb: int, session) -> dict:
+    season = session.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={series_omdb_id}&Season={season_numb}").json()
     return season
 
 
@@ -42,6 +42,7 @@ def save_movie(movie):
 
     needed_data['genres'] = movie['Genre']
     needed_data['imdb_id'] = movie['imdbID']
+    needed_data['imdb_rating'] = movie['imdbRating']
 
     # initiation of the movie instance and saving
     movie = Movie(**needed_data)
@@ -69,14 +70,16 @@ def save_series(series_data):
     needed_data['plot'] = series_data['Plot']
     needed_data['total_seasons'] = series_data['totalSeasons']
     needed_data['imdb_id'] = series_data['imdbID']
+    needed_data['imdb_rating'] = series_data['imdbRating']
 
     # initiation of the movie instance and saving
     series = Series(**needed_data)
     series.save()
 
+    session = requests.Session()
     # iterationg through seasons
     for season_number in range(1, int(series.total_seasons)+1):
-        season_data = get_season_by_omdbid(series.imdb_id, season_number)
+        season_data = get_season_by_omdbid(series.imdb_id, season_number, session)
 
         # extracting only info needed for season model
         needed_data = {}
@@ -87,11 +90,11 @@ def save_series(series_data):
 
         # iterating through episodes
         episodes = []
-        session = requests.Session()
         for e in season_data["Episodes"]:
             episode_data = get_episode_by_omdbid(e["imdbID"], session)
             if not episode_data["Response"]:
                 break
+
             # extracting only info needed for series model
             needed_data = {}
             needed_data['title'] = episode_data['Title']
@@ -104,6 +107,10 @@ def save_series(series_data):
             # editing runtime field
             needed_data['runtime'] = episode_data['Runtime'].split(" ")[0]
             needed_data['plot'] = episode_data['Plot']
+
+            imdb_rating = episode_data['imdbRating']
+            if imdb_rating not in ["N/A"]:
+                needed_data['imdb_rating'] = imdb_rating
 
             episode = Episode(season=season, **needed_data)
             episodes.append(episode)

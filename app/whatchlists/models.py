@@ -11,6 +11,7 @@ class Movie(models.Model):
     runtime = models.PositiveIntegerField()
     genres = models.CharField(max_length=255)
     imdb_id = models.CharField(max_length=50)
+    imdb_rating = models.FloatField()
 
     class Meta:
         verbose_name = _("Movie")
@@ -35,6 +36,7 @@ class Series(models.Model):
     plot = models.TextField()
     total_seasons = models.PositiveIntegerField()
     imdb_id = models.CharField(max_length=50)
+    imdb_rating = models.FloatField()
 
     class Meta:
         verbose_name = _("Series")
@@ -53,6 +55,7 @@ class Season(models.Model):
     class Meta:
         verbose_name = _("Season")
         verbose_name_plural = _("Seasons")
+        ordering = ["season_numb"]
 
     def __str__(self):
         return f"{self.series} s. {self.season_numb}"
@@ -66,10 +69,12 @@ class Episode(models.Model):
     runtime = models.PositiveIntegerField()
     plot = models.TextField()
     season = models.ForeignKey(Season, on_delete=models.CASCADE)
+    imdb_rating = models.FloatField(null=True, blank=True)
 
     class Meta:
         verbose_name = _("Episode")
         verbose_name_plural = _("Episodes")
+        ordering = ["episode_numb"]
 
     def __str__(self):
         return self.title
