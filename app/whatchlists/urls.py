@@ -6,10 +6,11 @@ from whatchlists import views
 
 router = routers.DefaultRouter()
 router.register(r'movies', views.MovieViewSet)
+router.register(r'series', views.SeriesViewSet)
 
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("search/", views.search_by_search_test_view),
-    path("get/", views.search_by_omdbid_test_view)
+    path("search/", views.search_by_search_view),
+    path("get/", views.GetByOmdbIdView.as_view())
 ]
