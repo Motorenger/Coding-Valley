@@ -6,13 +6,13 @@ from whatchlists.models import Movie, Series, Season, Episode
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ['id', 'title', 'runtime', 'get_runtime', 'released', 'genres', 'imdb_rating']
+        fields = ['id', 'title', 'runtime', 'get_runtime', 'released', 'genres', 'poster', 'imdb_rating']
 
 
 class EpisodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Episode
-        fields = ['title', 'released', 'episode_numb', 'runtime', 'plot', 'imdb_rating']
+        fields = ['title', 'released', 'episode_numb', 'runtime', 'plot', 'poster', 'imdb_rating']
 
 
 class SeasonSerializer(serializers.ModelSerializer):
@@ -35,4 +35,4 @@ class SeriesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Series
-        fields = ['title', 'year', 'released', 'genres', 'plot', 'imdb_rating', 'total_seasons', "seasons"]
+        fields = ['title', 'year', 'released', 'genres', 'plot', 'imdb_rating', 'total_seasons', "poster", "seasons"]

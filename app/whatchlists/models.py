@@ -10,6 +10,7 @@ class Movie(models.Model):
     released = models.DateField(_("Release date"))
     runtime = models.PositiveIntegerField()
     genres = models.CharField(max_length=255)
+    poster = models.URLField(max_length=200)
     imdb_id = models.CharField(max_length=50)
     imdb_rating = models.FloatField()
 
@@ -35,6 +36,7 @@ class Series(models.Model):
     genres = models.CharField(max_length=255)
     plot = models.TextField()
     total_seasons = models.PositiveIntegerField()
+    poster = models.URLField(max_length=200)
     imdb_id = models.CharField(max_length=50)
     imdb_rating = models.FloatField()
 
@@ -68,6 +70,7 @@ class Episode(models.Model):
     episode_numb = models.PositiveIntegerField()
     runtime = models.PositiveIntegerField()
     plot = models.TextField()
+    poster = models.URLField(max_length=200)
     season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name="episodes")
     imdb_rating = models.FloatField(null=True, blank=True)
 

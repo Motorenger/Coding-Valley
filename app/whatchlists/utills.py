@@ -46,6 +46,7 @@ def save_movie(imdb_id):
     needed_data['runtime'] = movie_data['Runtime'].split(' ')[0]
 
     needed_data['genres'] = movie_data['Genre']
+    needed_data['poster'] = movie_data['Poster']
     needed_data['imdb_id'] = movie_data['imdbID']
     needed_data['imdb_rating'] = movie_data['imdbRating']
 
@@ -77,6 +78,7 @@ def save_series(imdb_id):
     needed_data['genres'] = series_data['Genre']
     needed_data['plot'] = series_data['Plot']
     needed_data['total_seasons'] = series_data['totalSeasons']
+    needed_data['poster'] = series_data['Poster']
     needed_data['imdb_id'] = series_data['imdbID']
     needed_data['imdb_rating'] = series_data['imdbRating']
 
@@ -114,8 +116,9 @@ def save_series(imdb_id):
             # editing runtime field
             needed_data['runtime'] = episode_data['Runtime'].split(" ")[0]
             needed_data['plot'] = episode_data['Plot']
-
+            needed_data['poster'] = episode_data['Poster']
             imdb_rating = episode_data['imdbRating']
+
             if imdb_rating not in ["N/A"]:
                 needed_data['imdb_rating'] = imdb_rating
 
