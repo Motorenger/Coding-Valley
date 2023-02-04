@@ -3,8 +3,8 @@ from rest_framework.generics import RetrieveAPIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from whatchlists.models import Movie, Series
-from whatchlists.serializers import MovieSerializer, SeriesSerializer
+from whatchlists.models import Movie, Series, Season
+from whatchlists.serializers import MovieSerializer, SeriesSerializer, SeasonSerializer
 from whatchlists.utills import get_omdb_by_search, get_omdb_by_omdbid, save_movie, save_series
 
 
@@ -53,6 +53,24 @@ class GetByOmdbIdView(RetrieveAPIView):
         elif type == "series":
             return SeriesSerializer
 
+    def get_serializer_context(self):
+        context = {}
+        context["imdb_rating"] = self.request.query_params.get("imdb_rating", None)
+        return context
+
+
+class GetSeason(RetrieveAPIView):
+    serializer_class = SeasonSerializer
+    
+    def get_object(self):
+        imdb_id = self.request.query_params["imdb_id"]
+        season_number = self.request.query_params["season"]
+        series = Series.objects.get(imdb_id=imdb_id)
+        season = series.seasons.get(season_numb=season_number)
+        return season
+
+
+    
     def get_serializer_context(self):
         context = {}
         context["imdb_rating"] = self.request.query_params.get("imdb_rating", None)
