@@ -69,7 +69,6 @@ class GetSeason(RetrieveAPIView):
         season = series.seasons.get(season_numb=season_number)
         return season
 
-
     
     def get_serializer_context(self):
         context = {}
