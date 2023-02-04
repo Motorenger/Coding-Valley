@@ -11,8 +11,11 @@ def get_omdb_by_search(search: str) -> dict:
     return data
 
 
-def get_omdb_by_omdbid(omdb_id: str):
-    data = requests.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={omdb_id}").json()
+def get_omdb_by_omdbid(omdb_id: str, session=None):
+    if session:
+            data = session.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={omdb_id}").json()
+    else:
+        data = session.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={omdb_id}").json()
     return data
 
 
@@ -26,23 +29,25 @@ def get_episode_by_omdbid(episode_omdb_id: str, session) -> dict:
     return episode
 
 
-def save_movie(movie):
+def save_movie(imdb_id):
     """Creates movie and return it"""
+
+    movie_data = get_omdb_by_omdbid(imdb_id)
 
     # extracting only info needed for movie model
     needed_data = {}
-    needed_data['title'] = movie['Title']
+    needed_data['title'] = movie_data['Title']
 
     # converting date format
-    released = datetime.strptime(movie['Released'], '%d %b %Y').date()
+    released = datetime.strptime(movie_data['Released'], '%d %b %Y').date()
     needed_data['released'] = released
 
     # editing runtime field
-    needed_data['runtime'] = movie['Runtime'].split(' ')[0]
+    needed_data['runtime'] = movie_data['Runtime'].split(' ')[0]
 
-    needed_data['genres'] = movie['Genre']
-    needed_data['imdb_id'] = movie['imdbID']
-    needed_data['imdb_rating'] = movie['imdbRating']
+    needed_data['genres'] = movie_data['Genre']
+    needed_data['imdb_id'] = movie_data['imdbID']
+    needed_data['imdb_rating'] = movie_data['imdbRating']
 
     # initiation of the movie instance and saving
     movie = Movie(**needed_data)
@@ -51,11 +56,14 @@ def save_movie(movie):
     return movie
 
 
-def save_series(series_data):
+def save_series(imdb_id):
     """At first saves series then iterated through
         season and series and saves them too,
         returns series instance
     """
+    session = requests.Session()
+
+    series_data = get_omdb_by_omdbid(imdb_id, session)
 
     # extracting only info needed for series model
     needed_data = {}
@@ -76,7 +84,6 @@ def save_series(series_data):
     series = Series(**needed_data)
     series.save()
 
-    session = requests.Session()
     # iterationg through seasons
     for season_number in range(1, int(series.total_seasons)+1):
         season_data = get_season_by_omdbid(series.imdb_id, season_number, session)
