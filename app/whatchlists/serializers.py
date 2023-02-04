@@ -16,12 +16,19 @@ class EpisodeSerializer(serializers.ModelSerializer):
 
 
 class SeasonSerializer(serializers.ModelSerializer):
-    episodes = EpisodeSerializer(many=True, read_only=True)
+    episodes = serializers.SerializerMethodField()
 
     class Meta:
         model = Season
         fields = ['season_numb', 'total_episodes', 'episodes']
 
+    def get_episodes(self, instance):
+        imdb_rating = self.context["imdb_rating"]
+        if imdb_rating:
+            episodes = instance.episodes.filter(imdb_rating=imdb_rating)
+        else:
+            episodes = instance.episodes.all()
+        return EpisodeSerializer(episodes, many=True).data
 
 class SeriesSerializer(serializers.ModelSerializer):
     seasons = SeasonSerializer(many=True, read_only=True)

@@ -26,7 +26,6 @@ def search_by_search_view(request):
 
 
 class GetByOmdbIdView(RetrieveAPIView):
-    lookup_field = "imdb_id"
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -46,6 +45,7 @@ class GetByOmdbIdView(RetrieveAPIView):
             except Series.DoesNotExist:
                 series = save_series(imdb_id)
             return series
+
     def get_serializer_class(self):
         type = self.request.query_params["type"]
         if type == "movie":
@@ -53,16 +53,7 @@ class GetByOmdbIdView(RetrieveAPIView):
         elif type == "series":
             return SeriesSerializer
 
-@api_view()
-def get_by_omdbid_view(request):
-    # getting data from omdb
-    omdb_id = request.query_params['omdb_id']
-    search_results = get_omdb_by_omdbid(omdb_id)
-
-    data, data_type = save_to_db_or_get(search_results)
-    if data_type == "movie":
-        serializer = MovieSerializer(data)
-    elif data_type == "series":
-        print(data, data_type)
-        serializer = SeriesSerializer(data)
-    return Response(serializer.data)
+    def get_serializer_context(self):
+        context = {}
+        context["imdb_rating"] = self.request.query_params.get("imdb_rating", None)
+        return context
