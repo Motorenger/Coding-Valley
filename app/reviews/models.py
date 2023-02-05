@@ -10,7 +10,7 @@ from whatchlists.models import Movie, Series
 
 class Review(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews")
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews", editable=False)
     title = models.CharField(max_length=150)
     content = models.TextField(null=True, blank=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="reviews", null=True, blank=True)
@@ -28,6 +28,7 @@ class Review(models.Model):
     class Meta:
         verbose_name = _("Review")
         verbose_name_plural = _("Reviews")
+        ordering = ["-created"]
 
     def __str__(self):
         return self.title
@@ -41,3 +42,4 @@ class ReviewLikes(models.Model):
     class Meta:
         verbose_name = _("ReviewLikes")
         verbose_name_plural = _("ReviewLikes")
+        unique_together = ('review', 'user')
