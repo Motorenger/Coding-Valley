@@ -35,6 +35,25 @@ class UserTokenObtainPairSerializer(TokenObtainPairSerializer):
         return data
 
 
+class UserSerializerWithToken(UserSerializer):
+    access = serializers.SerializerMethodField(read_only=True)
+    refresh = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = User
+        exclude = ['password']
+
+    def get_access(self, obj):
+        token = RefreshToken.for_user(obj)
+        token['username'] = obj.username
+        token['email'] = obj.email
+        return str(token.access_token)
+
+    def get_refresh(self, obj):
+        token = RefreshToken.for_user(obj)
+        return str(token)
+
+
 class RegisterSerializer(UserSerializer):
     email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
