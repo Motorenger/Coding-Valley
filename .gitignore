@@ -145,4 +145,3 @@ cython_debug/
 
 config/
 settings_dev.py
-.flake8
