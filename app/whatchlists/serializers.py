@@ -30,6 +30,7 @@ class SeasonSerializer(serializers.ModelSerializer):
             episodes = instance.episodes.all()
         return EpisodeSerializer(episodes, many=True).data
 
+
 class SeriesSerializer(serializers.ModelSerializer):
     seasons = SeasonSerializer(many=True, read_only=True)
 
