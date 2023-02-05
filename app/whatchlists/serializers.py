@@ -24,7 +24,7 @@ class SeasonSerializer(serializers.ModelSerializer):
 
     def get_episodes(self, instance):
         imdb_rating = self.context["imdb_rating"]
-        if imdb_rating:
+        if imdb_rating is not None:
             episodes = instance.episodes.filter(imdb_rating__gte=imdb_rating)
         else:
             episodes = instance.episodes.all()
