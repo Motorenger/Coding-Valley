@@ -21,4 +21,5 @@ urlpatterns = [
     path("users/", include("users.urls")),
     path("", include("whatchlists.urls")),
     path("", include("discussions.urls")),
+    path("", include("reviews.urls")),
 ]
