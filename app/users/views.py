@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -11,6 +13,9 @@ from users.serializers import (
     UserSerializerWithToken,
     UserTokenObtainPairSerializer
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class UserTokenObtainPairView(TokenObtainPairView):
@@ -43,5 +48,6 @@ class RegisterView(APIView):
             )
             serializer = UserSerializerWithToken(user, many=False)
         except Exception as e:
+            logger.error(f'users/register: {e}')
             return Response({'detail': f'{e}'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.data)
