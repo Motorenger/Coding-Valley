@@ -1,38 +1,15 @@
-import os
 from datetime import datetime
 
 import requests
 
+from . import omdb_requests as req
 from whatchlists.models import Movie, Series, Season, Episode
 
 
-def get_omdb_by_search(search: str) -> dict:
-    data = requests.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&s={search}").json()
-    return data
-
-
-def get_omdb_by_omdbid(omdb_id: str, session=None):
-    if session:
-            data = session.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={omdb_id}").json()
-    else:
-        data = requests.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={omdb_id}").json()
-    return data
-
-
-def get_season_by_omdbid(series_omdb_id: str, season_numb: int, session) -> dict:
-    season = session.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={series_omdb_id}&Season={season_numb}").json()
-    return season
-
-
-def get_episode_by_omdbid(episode_omdb_id: str, session) -> dict:
-    episode = session.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={episode_omdb_id}").json()
-    return episode
-
-
 def save_movie(imdb_id):
-    """Creates movie and return it"""
+    """Creates movie and returns it"""
 
-    movie_data = get_omdb_by_omdbid(imdb_id)
+    movie_data = req.get_omdb_by_omdbid(imdb_id)
 
     # extracting only info needed for movie model
     needed_data = {}
@@ -59,12 +36,12 @@ def save_movie(imdb_id):
 
 def save_series(imdb_id):
     """At first saves series then iterated through
-        season and series and saves them too,
+        season and episodes and saves them too,
         returns series instance
     """
     session = requests.Session()
 
-    series_data = get_omdb_by_omdbid(imdb_id, session)
+    series_data = req.get_omdb_by_omdbid(imdb_id, session)
 
     # extracting only info needed for series model
     needed_data = {}
@@ -88,7 +65,7 @@ def save_series(imdb_id):
 
     # iterationg through seasons
     for season_number in range(1, int(series.total_seasons)+1):
-        season_data = get_season_by_omdbid(series.imdb_id, season_number, session)
+        season_data = req.get_season_by_omdbid(series.imdb_id, season_number, session)
 
         # extracting only info needed for season model
         needed_data = {}
@@ -100,7 +77,7 @@ def save_series(imdb_id):
         # iterating through episodes
         episodes = []
         for e in season_data["Episodes"]:
-            episode_data = get_episode_by_omdbid(e["imdbID"], session)
+            episode_data = req.get_episode_by_omdbid(e["imdbID"], session)
             if not episode_data["Response"]:
                 break
 
@@ -129,30 +106,3 @@ def save_series(imdb_id):
         season.save()
         Episode.objects.bulk_create(episodes)
     return series
-
-
-def save_to_db_or_get(data: dict):
-    '''Function takes data returned by imdb,
-       distinguishes wheter it is movie of series,
-       than if there is already insctance in db it returns it
-       if there is not that calls creation functions
-    '''
-
-    # sorting by type (movie or series)
-    data_type = data.get('Type', None)
-
-    if data_type == 'movie':
-        # checking for existing movie
-        try:
-            movie = Movie.objects.get(imdb_id=data["imdbID"])
-        except Movie.DoesNotExist:
-            movie = save_movie(data), "movie"
-
-        return movie
-    elif data_type == 'series':
-        try:
-            series = Series.objects.get(imdb_id=data["imdbID"])
-        except Series.DoesNotExist:
-            series = save_series(data)
-
-        return series, "series"
