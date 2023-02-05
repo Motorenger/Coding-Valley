@@ -6,8 +6,9 @@ from users import views
 
 
 urlpatterns = [
-    path('', views.getRoutes),
+    path('login/', views.LoginView.as_view(), name='login'),
     path('register/', views.RegisterView.as_view(), name='register'),
-    path('token/', views.UserTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('logout/', views.LogoutView.as_view(), name='logout'),
+    path('logout/all/', views.LogoutAllView.as_view(), name='logout_all'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
