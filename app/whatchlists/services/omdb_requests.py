@@ -3,8 +3,8 @@ import os
 import requests
 
 
-def get_omdb_by_search(search: str, page) -> dict:
-    data = requests.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&s={search}&page={page}").json()
+def get_omdb_by_search(search: str, page, year) -> dict:
+    data = requests.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&s={search}&page={page}&y={year}").json()
     return data
 
 

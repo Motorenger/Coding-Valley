@@ -22,7 +22,8 @@ class SeriesViewSet(viewsets.ModelViewSet):
 def search_by_search_view(request):
     search = request.query_params['search']
     page = request.query_params.get('page', 1)
-    search_results = omdb_requests.get_omdb_by_search(search, page)
+    year = request.query_params.get('year', None)
+    search_results = omdb_requests.get_omdb_by_search(search, page, year)
     return Response(search_results)
 
 
