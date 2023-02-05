@@ -8,4 +8,4 @@ __pycache__
 .gitignore
 .dockerignore
 .pytest_cache
-.flake8
+.circleci
