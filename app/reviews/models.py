@@ -36,7 +36,7 @@ class Review(models.Model):
 
 class ReviewLikes(models.Model):
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="users_liked")
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews_liked")
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews_liked", editable=False)
     like = models.BooleanField(default=True)
 
     class Meta:
