@@ -23,9 +23,9 @@ class ReviewViewSet(mixins.CreateModelMixin,
         return ReviewSerializer
 
 
-class ReviewLikesViewSet(mixins.CreateModelMixin,
-                         mixins.DestroyModelMixin,
-                         GenericViewSet):
+class ReviewLikeViewSet(mixins.CreateModelMixin,
+                        mixins.DestroyModelMixin,
+                        GenericViewSet):
     queryset = ReviewLikes.objects.all()
     serializer_class = ReviewLikesSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrIsAdminOrReadOnly]
