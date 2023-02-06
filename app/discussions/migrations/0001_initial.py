@@ -30,6 +30,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Discussion',
                 'verbose_name_plural': 'Discussions',
+                'ordering': ['-created'],
             },
         ),
         migrations.CreateModel(
@@ -37,12 +38,14 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
                 ('content', models.TextField()),
+                ('created', models.DateTimeField(auto_now_add=True)),
                 ('discussion', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='discussions.discussion')),
                 ('user', models.ForeignKey(editable=False, on_delete=django.db.models.deletion.CASCADE, related_name='comments', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name': 'Comment',
                 'verbose_name_plural': 'Comments',
+                'ordering': ['-created'],
             },
         ),
     ]

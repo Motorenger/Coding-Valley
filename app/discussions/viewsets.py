@@ -31,7 +31,6 @@ class CommentViewSet(mixins.CreateModelMixin,
         serializer.save(user=self.request.user)
 
     def get_serializer_class(self):
-        print('get_serializer_class', self.action)
         if self.action in ('update', 'partial_update'):
             return CommentSerializerForUpdate
         return CommentSerializer

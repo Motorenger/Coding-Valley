@@ -10,7 +10,7 @@ from whatchlists.models import Media
 
 class Review(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews")
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews", editable=False)
     title = models.CharField(max_length=150)
     content = models.TextField(null=True, blank=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews", editable=False)
@@ -28,6 +28,7 @@ class Review(models.Model):
     class Meta:
         verbose_name = _("Review")
         verbose_name_plural = _("Reviews")
+        ordering = ["-created"]
 
     def __str__(self):
         return self.title
@@ -35,9 +36,10 @@ class Review(models.Model):
 
 class ReviewLikes(models.Model):
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="users_liked")
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews_liked")
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews_liked", editable=False)
     like = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = _("ReviewLikes")
         verbose_name_plural = _("ReviewLikes")
+        unique_together = ('review', 'user')
