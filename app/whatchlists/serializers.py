@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
-from whatchlists.models import Movie, Series, Season, Episode
+from whatchlists.models import (Movie, Series, Season, Episode)
 
 
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ['id', 'title', 'runtime', 'get_runtime', 'released', 'genres', 'poster', 'imdb_rating']
+        fields = ['id', 'title', 'runtime', 'released', 'genres', 'poster', 'imdb_rating']
 
 
 class EpisodeSerializer(serializers.ModelSerializer):

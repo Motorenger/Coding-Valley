@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext as _
 
-from whatchlists.models import Movie, Series
+from whatchlists.models import Media
 
 
 class UserManager(BaseUserManager):
@@ -56,8 +56,7 @@ class User(AbstractUser):
     first_name = None
     last_name = None
 
-    favourite_movies = models.ManyToManyField(Movie, related_name="users", blank=True)
-    favourite_series = models.ManyToManyField(Series, related_name="users", blank=True)
+    favourite_medias = models.ManyToManyField(Media, related_name="users", blank=True)
 
     objects = UserManager()
 
