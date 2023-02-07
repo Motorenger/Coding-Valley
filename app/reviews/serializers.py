@@ -11,9 +11,9 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = [
-            'id', 'user', 'title', 'content', 'movie',
-            'series', 'created', 'stars', 'likes',
-            'dislikes', 'current_user_reviewlike'
+            'id', 'user', 'title', 'content', 'media',
+            'created', 'stars', 'likes', 'dislikes', 
+            'current_user_reviewlike'
         ]
 
     def get_likes_number(self, obj):
@@ -24,6 +24,9 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def get_current_user_reviewlike(self, obj):
         current_user = self.context['request'].user
+        if not current_user.is_authenticated:
+            return None
+
         try:
             reviewlike = obj.users_liked.get(user=current_user)
         except ReviewLikes.DoesNotExist:
