@@ -3,7 +3,10 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from discussions.models import Discussion, Comment
-from discussions.serializers import DiscussionSerializer, DiscussionSerializerWithComments, CommentSerializer, CommentSerializerForUpdate
+from discussions.serializers import (
+    DiscussionSerializer, DiscussionSerializerWithComments,
+    CommentSerializer, CommentSerializerForUpdate
+)
 from users.permissions import IsOwnerOrIsAdminOrReadOnly
 
 

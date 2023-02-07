@@ -8,19 +8,25 @@ from discussions.models import Discussion, Comment
 class DiscussionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discussion
-        fields = ['id', 'title', 'content', 'created', 'updated', 'user', 'movie']
+        fields = [
+            'id', 'title', 'content', 'created',
+            'updated', 'user', 'media'
+        ]
 
 
 class DiscussionSerializerWithComments(serializers.ModelSerializer):
-    comments_new = serializers.SerializerMethodField('paginated_comments')
+    comments = serializers.SerializerMethodField('get_paginated_comments')
 
     class Meta:
         model = Discussion
-        fields = ['id', 'title', 'content', 'created', 'updated', 'user', 'movie', 'comments', 'comments_new']
+        fields = [
+            'id', 'title', 'content', 'created',
+            'updated', 'user', 'media', 'comments'
+        ]
 
-    def paginated_comments(self, obj):
-        page_size = self.context['request'].query_params.get('size') or 5
-        page_number = self.context['request'].query_params.get('page') or 1
+    def get_paginated_comments(self, obj):
+        page_size = self.context['request'].query_params.get('size', 5)
+        page_number = self.context['request'].query_params.get('page', 1)
         url = reverse('discussions_app:discussions-detail', args=(obj.id,))
         paginator = Paginator(obj.comments.all(), page_size)
         page = self.get_page(paginator, page_number, page_size, url)
@@ -58,5 +64,4 @@ class CommentSerializer(serializers.ModelSerializer):
 class CommentSerializerForUpdate(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'content', 'user', 'discussion']
-        read_only_fields = ['discussion']
+        fields = ['content']

@@ -9,223 +9,237 @@ pytestmark = pytest.mark.django_db
 
 
 class TestReviewViewSet:
-    # LIST
+    # list
     def test_list_with_unauthenticated_user_with_no_reviews(self, api_client):
-        # WHEN
+        # when
         response = api_client.get(reverse("reviews_app:reviews-list"))
-        # THEN
+        # then
         assert response.status_code == 405, "Status code of response must be 405"
 
     def test_list_with_unauthenticated_user(self, api_client):
-        # GIVEN
+        # given
         baker.make("reviews.Review")
-        # WHEN
+        # when
         response = api_client.get(reverse("reviews_app:reviews-list"))
-        # THEN
+        # then
         assert response.status_code == 405, "Status code of response must be 405"
 
     def test_list_with_authenticated_user(self, api_client, user):
-        # GIVEN
+        # given
         baker.make("reviews.Review")
         api_client.force_authenticate(user=user)
-        # WHEN
+        # when
         response = api_client.get(reverse("reviews_app:reviews-list"))
-        # THEN
+        # then
         assert response.status_code == 405, "Status code of response must be 405"
 
-    # RETRIEVE
+    # retrieve
     def test_retrieve_with_unauthenticated_user(self, api_client):
-        # GIVEN
+        # given
         review = baker.make("reviews.Review")
-        # WHEN
+        # when
         response = api_client.get(reverse("reviews_app:reviews-detail", args=(review.id,)))
-        # THEN
+        # then
         assert response.status_code == 405, "Status code of response must be 405"
 
     def test_retrieve_with_authenticated_user(self, api_client, user):
-        # GIVEN
+        # given
         review = baker.make("reviews.Review")
         api_client.force_authenticate(user=user)
-        # WHEN
+        # when
         response = api_client.get(reverse("reviews_app:reviews-detail", args=(review.id,)))
-        # THEN
+        # then
         assert response.status_code == 405, "Status code of response must be 405"
 
-    # CREATE
+    # create
     def test_create_with_unauthenticated_user(self, api_client):
-        # GIVEN
-        review = {"title": "some title", "content": "some content", "stars": 5}
-        # WHEN
+        # given
+        media = baker.make("whatchlists.Media")
+        review = {"media": media.id, "title": "some title", "content": "some content", "stars": 5}
+        # when
         response = api_client.post(reverse("reviews_app:reviews-list"), review)
         reviews_number = Review.objects.count()
-        # THEN
+        # then
         assert response.status_code == 401, "Status code of response must be 401"
         assert reviews_number == 0, "There must be no reviews"
 
     def test_create_with_authenticated_user(self, api_client, user):
-        # GIVEN
-        review = {"title": "some title", "content": "some content", "stars": 5}
+        # given
+        media = baker.make("whatchlists.Media")
+        review = {"media": media.id, "title": "some title", "content": "some content", "stars": 5}
         api_client.force_authenticate(user=user)
-        # WHEN
+        # when
         response = api_client.post(reverse("reviews_app:reviews-list"), review)
         reviews_number = Review.objects.count()
-        # THEN
+        # then
         assert response.status_code == 201, "Status code of response must be 201"
         assert response.json().get('user') == str(user.id), "The response object must belong to the given user"
         assert reviews_number == 1, "There must be one review"
 
-    # UPDATE
+    # update
     def test_update_with_unauthenticated_user(self, api_client, owner):
-        # GIVEN
+        # given
         review = baker.prepare("reviews.Review")
         review.user = owner
+        review.media = baker.make("whatchlists.Media")
         review.save()
         new_review = {"title": "new title", "content": "new content", "stars": 1}
-        # WHEN
+        # when
         response = api_client.put(reverse("reviews_app:reviews-detail", args=(review.id,)), new_review)
-        # THEN
+        # then
         assert response.status_code == 401, "Status code of response must be 401"
         assert response.json().get('content') != 'new content', "The response object must not contain 'new content'"
 
     def test_update_with_not_owner(self, api_client, owner, not_owner):
-        # GIVEN
+        # given
         review = baker.prepare("reviews.Review")
         review.user = owner
+        review.media = baker.make("whatchlists.Media")
         review.save()
         new_review = {"title": "new title", "content": "new content", "stars": 1}
         api_client.force_authenticate(user=not_owner)
-        # WHEN
+        # when
         response = api_client.put(reverse("reviews_app:reviews-detail", args=(review.id,)), new_review)
-        # THEN
+        # then
         assert response.status_code == 403, "Status code of response must be 403"
         assert response.json().get('content') != 'new content', "The response object must not contain 'new content'"
 
     def test_update_with_owner(self, api_client, owner):
-        # GIVEN
+        # given
         review = baker.prepare("reviews.Review")
         review.user = owner
+        review.media = baker.make("whatchlists.Media")
         review.save()
         new_review = {"title": "new title", "content": "new content", "stars": 1}
         api_client.force_authenticate(user=owner)
-        # WHEN
+        # when
         response = api_client.put(reverse("reviews_app:reviews-detail", args=(review.id,)), new_review)
-        # THEN
+        # then
         assert response.status_code == 200, "Status code of response must be 200"
         assert response.json().get('content') == 'new content', "The response object must contain 'new content'"
 
     def test_update_with_admin(self, api_client, owner, admin):
-        # GIVEN
+        # given
         review = baker.prepare("reviews.Review")
         review.user = owner
+        review.media = baker.make("whatchlists.Media")
         review.save()
         new_review = {"title": "new title", "content": "new content", "stars": 1}
         api_client.force_authenticate(user=admin)
-        # WHEN
+        # when
         response = api_client.put(reverse("reviews_app:reviews-detail", args=(review.id,)), new_review)
-        # THEN
+        # then
         assert response.status_code == 200, "Status code of response must be 200"
         assert response.json().get('content') == 'new content', "The response object must contain 'new content'"
 
-    # PARTIAL UPDATE
+    # partial update
     def test_partial_update_with_unauthenticated_user(self, api_client, owner):
-        # GIVEN
+        # given
         review = baker.prepare("reviews.Review")
         review.user = owner
+        review.media = baker.make("whatchlists.Media")
         review.save()
         partial_review = {'content': 'new content'}
-        # WHEN
+        # when
         response = api_client.patch(reverse("reviews_app:reviews-detail", args=(review.id,)), partial_review)
-        # THEN
+        # then
         assert response.status_code == 401, "Status code of response must be 401"
         assert response.json().get('content') != 'new content', "The response object must not contain 'new content'"
 
     def test_partial_update_with_not_owner(self, api_client, owner, not_owner):
-        # GIVEN
+        # given
         review = baker.prepare("reviews.Review")
         review.user = owner
+        review.media = baker.make("whatchlists.Media")
         review.save()
         partial_review = {'content': 'new content'}
         api_client.force_authenticate(user=not_owner)
-        # WHEN
+        # when
         response = api_client.patch(reverse("reviews_app:reviews-detail", args=(review.id,)), partial_review)
-        # THEN
+        # then
         assert response.status_code == 403, "Status code of response must be 403"
         assert response.json().get('content') != 'new content', "The response object must not contain 'new content'"
 
     def test_partial_update_with_owner(self, api_client, owner):
-        # GIVEN
+        # given
         review = baker.prepare("reviews.Review")
         review.user = owner
+        review.media = baker.make("whatchlists.Media")
         review.save()
         partial_review = {'content': 'new content'}
         api_client.force_authenticate(user=owner)
-        # WHEN
+        # when
         response = api_client.patch(reverse("reviews_app:reviews-detail", args=(review.id,)), partial_review)
-        # THEN
+        # then
         assert response.status_code == 200, "Status code of response must be 200"
         assert response.json().get('content') == 'new content', "The response object must contain 'new content'"
 
     def test_partial_update_with_admin(self, api_client, owner, admin):
-        # GIVEN
+        # given
         review = baker.prepare("reviews.Review")
         review.user = owner
+        review.media = baker.make("whatchlists.Media")
         review.save()
         partial_review = {'content': 'new content'}
         api_client.force_authenticate(user=admin)
-        # WHEN
+        # when
         response = api_client.patch(reverse("reviews_app:reviews-detail", args=(review.id,)), partial_review)
-        # THEN
+        # then
         assert response.status_code == 200, "Status code of response must be 200"
         assert response.json().get('content') == 'new content', "The response object must contain 'new content'"
 
-    # DESTROY
+    # destroy
     def test_destroy_with_unauthenticated_user(self, api_client, owner):
-        # GIVEN
+        # given
         review = baker.prepare("reviews.Review")
         review.user = owner
+        review.media = baker.make("whatchlists.Media")
         review.save()
-        # WHEN
+        # when
         response = api_client.delete(reverse("reviews_app:reviews-detail", args=(review.id,)))
         reviews_number = Review.objects.count()
-        # THEN
+        # then
         assert response.status_code == 401, "Status code of response must be 401"
         assert reviews_number == 1, "There must be one review"
 
     def test_destroy_with_not_owner(self, api_client, owner, not_owner):
-        # GIVEN
+        # given
         review = baker.prepare("reviews.Review")
         review.user = owner
+        review.media = baker.make("whatchlists.Media")
         review.save()
         api_client.force_authenticate(user=not_owner)
-        # WHEN
+        # when
         response = api_client.delete(reverse("reviews_app:reviews-detail", args=(review.id,)))
         reviews_number = Review.objects.count()
-        # THEN
+        # then
         assert response.status_code == 403, "Status code of response must be 403"
         assert reviews_number == 1, "There must be one review"
 
     def test_destroy_with_owner(self, api_client, owner):
-        # GIVEN
+        # given
         review = baker.prepare("reviews.Review")
         review.user = owner
+        review.media = baker.make("whatchlists.Media")
         review.save()
         api_client.force_authenticate(user=owner)
-        # WHEN
+        # when
         response = api_client.delete(reverse("reviews_app:reviews-detail", args=(review.id,)))
         reviews_number = Review.objects.count()
-        # THEN
+        # then
         assert response.status_code == 204, "Status code of response must be 204"
         assert reviews_number == 0, "There must be no reviews"
 
     def test_destroy_with_admin(self, api_client, owner, admin):
-        # GIVEN
+        # given
         review = baker.prepare("reviews.Review")
         review.user = owner
+        review.media = baker.make("whatchlists.Media")
         review.save()
         api_client.force_authenticate(user=admin)
-        # WHEN
+        # when
         response = api_client.delete(reverse("reviews_app:reviews-detail", args=(review.id,)))
         reviews_number = Review.objects.count()
-        # THEN
+        # then
         assert response.status_code == 204, "Status code of response must be 204"
         assert reviews_number == 0, "There must be no reviews"
