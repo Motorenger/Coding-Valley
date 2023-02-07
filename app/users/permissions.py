@@ -6,6 +6,7 @@ class IsOwnerOrIsAdminOrReadOnly(permissions.BasePermission):
     Allows the object to be updated or deleted by object's owner or admin.
     Other users can only read the object.
     """
+
     def has_permission(self, request, view):
         return request.user
 

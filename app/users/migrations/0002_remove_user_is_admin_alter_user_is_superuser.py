@@ -6,17 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0001_initial'),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='user',
-            name='is_admin',
+            model_name="user",
+            name="is_admin",
         ),
         migrations.AlterField(
-            model_name='user',
-            name='is_superuser',
+            model_name="user",
+            name="is_superuser",
             field=models.BooleanField(default=False),
         ),
     ]

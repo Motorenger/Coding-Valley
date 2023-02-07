@@ -13,7 +13,7 @@ def review_created(sender, instance, created, **kwargs):
 
     followers = instance.user.userprofile.followers.all()
     for follower in followers:
-        notification = Notification.objects.create(
+        Notification.objects.create(
             to_user=follower,
             created_by=instance.user,
             notification_type="article",
@@ -28,7 +28,7 @@ def discussion_created(sender, instance, created, **kwargs):
         return
     followers = instance.user.userprofile.followers.all()
     for follower in followers:
-        notification = Notification.objects.create(
+        Notification.objects.create(
             to_user=follower,
             created_by=instance.user,
             notification_type="discussion",

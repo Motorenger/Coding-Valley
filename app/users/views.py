@@ -13,7 +13,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from users.models import User
-from users.serializers import (ChangePasswordSerializer, ProfileSerializer,
+from whatchlists.models import Media
+from notifications.models import Notification
+from users.serializers import (ChangePasswordSerializer, UserProfileSerializer,
                                RegisterSerializer, UpdateProfileSerializer,
                                UserTokenObtainPairSerializer)
 
@@ -69,7 +71,7 @@ class LogoutAllView(APIView):
 
 class ProfileView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = ProfileSerializer
+    serializer_class = UserProfileSerializer
 
     def get_object(self, **kwargs):
         return User.objects.get(username=self.kwargs['username'])
@@ -94,3 +96,65 @@ class ChangePasswordView(UpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class FollowView(APIView):
+    """
+    Follow user with notification to followed user
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, username):
+        try:
+            user = request.user
+            to_user = User.objects.get(username=username)
+            profile = to_user.userprofile
+            if user == to_user:
+                return Response('You can’ follow yourself', status=status.HTTP_400_BAD_REQUEST)
+
+            if user in profile.followers.all():
+                profile.followers.remove(user)
+                profile.followers_count = profile.followers.count()
+                profile.save()
+                return Response('User unfollowed', status=status.HTTP_204_NO_CONTENT)
+            else:
+                profile.followers.add(user)
+                profile.followers_count = profile.followers.count()
+                profile.save()
+                Notification.objects.create(
+                    to_user=to_user,
+                    created_by=user,
+                    notification_type='follow',
+                    followed_by=user,
+                    content=f"{user.userprofile.user} started following you."
+                )
+                return Response('User followed', status=status.HTTP_200_OK)
+        except Exception as e:
+            message = {'detail': f'{e}'}
+            return Response(message, status=status.HTTP_204_NO_CONTENT)
+
+
+class FavouritesView(APIView):
+    """
+    Follow user with notification to followed user
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, uuid):
+        try:
+            media = Media.objects.get(id=uuid)
+            profile = request.user.userprofile
+
+            if media in profile.favourites.all():
+                profile.favourites.remove(media)
+                profile.favourites_count = profile.favourites.count()
+                profile.save()
+                return Response('Removed from favourites', status=status.HTTP_204_NO_CONTENT)
+            else:
+                profile.favourites.add(media)
+                profile.favourites_count = profile.favourites.count()
+                profile.save()
+                return Response('Added to favourites', status=status.HTTP_200_OK)
+        except Exception as e:
+            message = {'detail': f'{e}'}
+            return Response(message, status=status.HTTP_204_NO_CONTENT)
