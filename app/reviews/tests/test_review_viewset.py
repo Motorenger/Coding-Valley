@@ -188,7 +188,6 @@ class TestReviewViewSet:
         assert response.status_code == 200, "Status code of response must be 200"
         assert response.json().get('content') == 'new content', "The response object must contain 'new content'"
 
-
     # destroy
     def test_destroy_with_unauthenticated_user(self, api_client, owner):
         # given

@@ -9,7 +9,7 @@ class DiscussionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discussion
         fields = [
-            'id', 'title', 'content', 'created', 
+            'id', 'title', 'content', 'created',
             'updated', 'user', 'media'
         ]
 
@@ -20,7 +20,7 @@ class DiscussionSerializerWithComments(serializers.ModelSerializer):
     class Meta:
         model = Discussion
         fields = [
-            'id', 'title', 'content', 'created', 
+            'id', 'title', 'content', 'created',
             'updated', 'user', 'media', 'comments'
         ]
 

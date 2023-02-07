@@ -12,7 +12,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = [
             'id', 'user', 'title', 'content', 'media',
-            'created', 'stars', 'likes', 'dislikes', 
+            'created', 'stars', 'likes', 'dislikes',
             'current_user_reviewlike'
         ]
 
