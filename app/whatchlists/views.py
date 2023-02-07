@@ -1,4 +1,3 @@
-from rest_framework import viewsets
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -6,17 +5,6 @@ from rest_framework.response import Response
 from whatchlists.models import Movie, Series
 from whatchlists.serializers import MovieSerializer, SeriesSerializer, SeasonSerializer
 from whatchlists.services import omdb_requests, db_saving
-
-
-class MovieViewSet(viewsets.ModelViewSet):
-    queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
-    pass
-
-
-class SeriesViewSet(viewsets.ModelViewSet):
-    queryset = Series.objects.all()
-    serializer_class = SeriesSerializer
 
 
 @api_view()
