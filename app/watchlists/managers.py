@@ -1,6 +1,6 @@
 from django.db import models
 
-from whatchlists import models as m
+from watchlists import models as m
 
 
 class MovieManager(models.Manager):

@@ -3,7 +3,7 @@ from datetime import datetime
 import requests
 
 from . import omdb_requests as req
-from whatchlists.models import Movie, Series, Season, Episode
+from watchlists.models import Movie, Series, Season, Episode
 
 
 def save_movie(imdb_id):

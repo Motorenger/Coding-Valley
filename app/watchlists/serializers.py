@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from whatchlists.models import (Movie, Series, Season, Episode)
+from watchlists.models import (Movie, Series, Season, Episode)
 
 
 class MovieSerializer(serializers.ModelSerializer):
