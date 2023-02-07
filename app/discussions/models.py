@@ -16,7 +16,6 @@ class Discussion(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="discussions", editable=False)
     media = models.ForeignKey(Media, on_delete=models.CASCADE, related_name="discussions", null=True, blank=True)
 
-
     class Meta:
         verbose_name = _("Discussion")
         verbose_name_plural = _("Discussions")
