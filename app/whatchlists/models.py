@@ -29,6 +29,9 @@ class Media(models.Model):
     total_seasons = models.PositiveIntegerField(null=True, blank=True)
     year = models.CharField(max_length=9, help_text="Use such format: 2018-2022", null=True, blank=True)
 
+    def __str__(self):
+        return self.title
+
 
 class Movie(Media):
     objects = MovieManager()
