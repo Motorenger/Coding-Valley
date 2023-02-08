@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from whatchlists.models import Media, Season, Episode
+from watchlists.models import Media, Season, Episode
 
 
 class EpisodeInline(admin.TabularInline):
