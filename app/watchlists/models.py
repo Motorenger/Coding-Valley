@@ -21,6 +21,7 @@ class Media(models.Model):
     imdb_id = models.CharField(max_length=50)
     imdb_rating = models.FloatField()
     media_type = models.CharField(max_length=6, choices=MediaTypes.choices)
+    last_retrieved = models.DateField(auto_now=True)
 
     # only movie
     runtime = models.PositiveIntegerField(null=True, blank=True)

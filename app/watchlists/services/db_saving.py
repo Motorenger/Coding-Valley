@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 import requests
 
@@ -16,7 +16,7 @@ def save_movie(imdb_id):
     needed_data['title'] = movie_data['Title']
 
     # converting date format
-    released = datetime.strptime(movie_data['Released'], '%d %b %Y').date()
+    released = datetime.datetime.strptime(movie_data['Released'], '%d %b %Y').date()
     needed_data['released'] = released
 
     # editing runtime field
@@ -26,6 +26,7 @@ def save_movie(imdb_id):
     needed_data['poster'] = movie_data['Poster']
     needed_data['imdb_id'] = movie_data['imdbID']
     needed_data['imdb_rating'] = movie_data['imdbRating']
+    needed_data['last_retrieved'] = datetime.datetime.today().date() - datetime.timedelta(days=1)
 
     # initiation of the movie instance and saving
     movie = Movie(**needed_data)

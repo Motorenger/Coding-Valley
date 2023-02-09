@@ -22,6 +22,11 @@ class ReviewViewSet(mixins.CreateModelMixin,
             return ReviewSerializerForUpdate
         return ReviewSerializer
 
+    def get_serializer_context(self):
+        context = {}
+        context["request"] = self.request
+        return context
+
 
 class ReviewLikeViewSet(mixins.CreateModelMixin,
                         mixins.DestroyModelMixin,
