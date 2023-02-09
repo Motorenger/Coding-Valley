@@ -1,6 +1,8 @@
 venv
-Dockerfile
-docker-compose.yaml
+Dockerfile.dev
+Dockerfile.prod
+docker-compose.dev.yml
+docker-compose.prod.yml
 README.md
 config
 __pycache__
@@ -8,4 +10,4 @@ __pycache__
 .gitignore
 .dockerignore
 .pytest_cache
-.circleci
+.github

@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from discussions.models import Discussion, Comment
 from discussions.serializers import (
-    DiscussionSerializer, DiscussionSerializerWithComments,
+    DiscussionSerializer, DiscussionSerializerForRetrieve,
     CommentSerializer, CommentSerializerForUpdate
 )
 from users.permissions import IsOwnerOrIsAdminOrReadOnly
@@ -19,7 +19,7 @@ class DiscussionViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
-            return DiscussionSerializerWithComments
+            return DiscussionSerializerForRetrieve
         return DiscussionSerializer
 
 
