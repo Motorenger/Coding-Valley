@@ -1,6 +1,12 @@
 from rest_framework import serializers
 
-from watchlists.models import (Movie, Series, Season, Episode)
+from watchlists.models import (Media, Movie, Series, Season, Episode)
+
+
+class MediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Media
+        fields = ['id', 'title', 'released', 'genres', 'poster', 'plot', 'imdb_id', 'imdb_rating', 'media_type']
 
 
 class MovieSerializer(serializers.ModelSerializer):
