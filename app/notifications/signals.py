@@ -6,23 +6,22 @@ from discussions.models import Discussion
 from notifications.models import Notification
 
 
-@receiver(post_save, sender=Discussion)
+@receiver(post_save, sender=Review)
 def review_created(sender, instance, created, **kwargs):
     if not created:
         return
-
     followers = instance.user.userprofile.followers.all()
     for follower in followers:
         Notification.objects.create(
             to_user=follower,
             created_by=instance.user,
-            notification_type="article",
+            notification_type="review",
             review=instance,
             content=f"An review {instance.title} recently posted by {instance.user.userprofile.user}.",
         )
 
 
-@receiver(post_save, sender=Review)
+@receiver(post_save, sender=Discussion)
 def discussion_created(sender, instance, created, **kwargs):
     if not created:
         return
