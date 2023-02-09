@@ -51,7 +51,7 @@ def save_series(imdb_id):
     needed_data['year'] = series_data['Year']
 
     # converting date format
-    released = datetime.strptime(series_data['Released'], '%d %b %Y').date()
+    released = datetime.datetime.strptime(series_data['Released'], '%d %b %Y').date()
     needed_data['released'] = released
 
     needed_data['genres'] = series_data['Genre']
