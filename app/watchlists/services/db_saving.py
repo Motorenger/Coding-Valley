@@ -2,6 +2,7 @@ import datetime
 
 import requests
 
+
 from . import omdb_requests as req
 from watchlists.models import Movie, Series, Season, Episode
 

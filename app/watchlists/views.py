@@ -10,23 +10,22 @@ from watchlists.services import omdb_requests, db_saving
 
 @api_view()
 def search_by_search_view(request):
-    search = request.query_params.get('search', None)
-    if search is not None:
-        page = request.query_params.get('page', 1)
-        year = request.query_params.get('year', None)
-        search_results = omdb_requests.get_omdb_by_search(search, page, year)
-        return Response(search_results)
-    raise Http404
+    search = request.query_params.get('search')
+    page = request.query_params.get('page', 1)
+    year = request.query_params.get('year')
+    if search is None:
+        raise Http404
+    search_results = omdb_requests.get_omdb_by_search(search, page, year)
+    return Response(search_results)
 
 
 class GetByOmdbIdView(RetrieveAPIView):
 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
-
     def get_object(self):
-        type = self.request.query_params["type"]
-        imdb_id = self.request.query_params["imdb_id"]
+        type = self.request.query_params.get("type")
+        imdb_id = self.request.query_params.get("imdb_id")
+        if not all([type, imdb_id]):
+            raise Http404
         if type == "movie":
             try:
                 movie = Movie.objects.get(imdb_id=imdb_id)
@@ -40,6 +39,7 @@ class GetByOmdbIdView(RetrieveAPIView):
             except Series.DoesNotExist:
                 series = db_saving.save_series(imdb_id)
             return series
+        raise Http404
 
     def get_serializer_class(self):
         type = self.request.query_params["type"]
@@ -72,5 +72,4 @@ class GetSeason(RetrieveAPIView):
 
 class RecentlySearched(ListAPIView):
     queryset = Media.objects.order_by('-last_retrieved')
-    print(queryset[0].last_retrieved)
     serializer_class = MediaSerializer
