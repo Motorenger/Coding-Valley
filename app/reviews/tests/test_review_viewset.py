@@ -54,7 +54,7 @@ class TestReviewViewSet:
     # create
     def test_create_with_unauthenticated_user(self, api_client):
         # given
-        media = baker.make("whatchlists.Media")
+        media = baker.make("watchlists.Media")
         review = {"media": media.id, "title": "some title", "content": "some content", "stars": 5}
         # when
         response = api_client.post(reverse("reviews_app:reviews-list"), review)
@@ -65,7 +65,7 @@ class TestReviewViewSet:
 
     def test_create_with_authenticated_user(self, api_client, user):
         # given
-        media = baker.make("whatchlists.Media")
+        media = baker.make("watchlists.Media")
         review = {"media": media.id, "title": "some title", "content": "some content", "stars": 5}
         api_client.force_authenticate(user=user)
         # when
@@ -81,7 +81,7 @@ class TestReviewViewSet:
         # given
         review = baker.prepare("reviews.Review")
         review.user = owner
-        review.media = baker.make("whatchlists.Media")
+        review.media = baker.make("watchlists.Media")
         review.save()
         new_review = {"title": "new title", "content": "new content", "stars": 1}
         # when
@@ -94,7 +94,7 @@ class TestReviewViewSet:
         # given
         review = baker.prepare("reviews.Review")
         review.user = owner
-        review.media = baker.make("whatchlists.Media")
+        review.media = baker.make("watchlists.Media")
         review.save()
         new_review = {"title": "new title", "content": "new content", "stars": 1}
         api_client.force_authenticate(user=not_owner)
@@ -108,7 +108,7 @@ class TestReviewViewSet:
         # given
         review = baker.prepare("reviews.Review")
         review.user = owner
-        review.media = baker.make("whatchlists.Media")
+        review.media = baker.make("watchlists.Media")
         review.save()
         new_review = {"title": "new title", "content": "new content", "stars": 1}
         api_client.force_authenticate(user=owner)
@@ -122,7 +122,7 @@ class TestReviewViewSet:
         # given
         review = baker.prepare("reviews.Review")
         review.user = owner
-        review.media = baker.make("whatchlists.Media")
+        review.media = baker.make("watchlists.Media")
         review.save()
         new_review = {"title": "new title", "content": "new content", "stars": 1}
         api_client.force_authenticate(user=admin)
@@ -137,7 +137,7 @@ class TestReviewViewSet:
         # given
         review = baker.prepare("reviews.Review")
         review.user = owner
-        review.media = baker.make("whatchlists.Media")
+        review.media = baker.make("watchlists.Media")
         review.save()
         partial_review = {'content': 'new content'}
         # when
@@ -150,7 +150,7 @@ class TestReviewViewSet:
         # given
         review = baker.prepare("reviews.Review")
         review.user = owner
-        review.media = baker.make("whatchlists.Media")
+        review.media = baker.make("watchlists.Media")
         review.save()
         partial_review = {'content': 'new content'}
         api_client.force_authenticate(user=not_owner)
@@ -164,7 +164,7 @@ class TestReviewViewSet:
         # given
         review = baker.prepare("reviews.Review")
         review.user = owner
-        review.media = baker.make("whatchlists.Media")
+        review.media = baker.make("watchlists.Media")
         review.save()
         partial_review = {'content': 'new content'}
         api_client.force_authenticate(user=owner)
@@ -178,7 +178,7 @@ class TestReviewViewSet:
         # given
         review = baker.prepare("reviews.Review")
         review.user = owner
-        review.media = baker.make("whatchlists.Media")
+        review.media = baker.make("watchlists.Media")
         review.save()
         partial_review = {'content': 'new content'}
         api_client.force_authenticate(user=admin)
@@ -193,7 +193,7 @@ class TestReviewViewSet:
         # given
         review = baker.prepare("reviews.Review")
         review.user = owner
-        review.media = baker.make("whatchlists.Media")
+        review.media = baker.make("watchlists.Media")
         review.save()
         # when
         response = api_client.delete(reverse("reviews_app:reviews-detail", args=(review.id,)))
@@ -206,7 +206,7 @@ class TestReviewViewSet:
         # given
         review = baker.prepare("reviews.Review")
         review.user = owner
-        review.media = baker.make("whatchlists.Media")
+        review.media = baker.make("watchlists.Media")
         review.save()
         api_client.force_authenticate(user=not_owner)
         # when
@@ -220,7 +220,7 @@ class TestReviewViewSet:
         # given
         review = baker.prepare("reviews.Review")
         review.user = owner
-        review.media = baker.make("whatchlists.Media")
+        review.media = baker.make("watchlists.Media")
         review.save()
         api_client.force_authenticate(user=owner)
         # when
@@ -234,7 +234,7 @@ class TestReviewViewSet:
         # given
         review = baker.prepare("reviews.Review")
         review.user = owner
-        review.media = baker.make("whatchlists.Media")
+        review.media = baker.make("watchlists.Media")
         review.save()
         api_client.force_authenticate(user=admin)
         # when
