@@ -1,7 +1,11 @@
 import os
+import socket
 
 from datetime import timedelta
 from pathlib import Path
+
+import base.tasks
+from celery.schedules import crontab
 
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -11,6 +15,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+
+INTERNAL_IPS = os.environ.get("INTERNAL_IPS").split(" ")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -23,6 +29,7 @@ INSTALLED_APPS = [
     # 3-rd party
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "debug_toolbar",
     "corsheaders",
 
     # local
@@ -117,7 +124,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
+    ),
 }
 
 SIMPLE_JWT = {
@@ -208,3 +215,30 @@ LOGGING = {
         }
     },
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "base.tasks.sample_task",
+        "schedule": crontab(minute="*/1"),
+    },
+}
+
+if DEBUG:
+    MIDDLEWARE += (
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
+
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
