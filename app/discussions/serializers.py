@@ -14,7 +14,7 @@ class DiscussionSerializer(serializers.ModelSerializer):
         ]
 
 
-class DiscussionSerializerWithComments(serializers.ModelSerializer):
+class DiscussionSerializerForRetrieve(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField('get_paginated_comments')
 
     class Meta:
