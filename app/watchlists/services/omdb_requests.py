@@ -15,7 +15,7 @@ def get_omdb_by_omdbid(omdb_id: str, session=None):
         data = session.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={omdb_id}").json()
     else:
         data = requests.get(f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={omdb_id}").json()
-    if bool(data['Response']) is True:
+    if (data['Response'] == "True"):
         return data
     raise Http404
 
