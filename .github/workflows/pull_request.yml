@@ -20,6 +20,9 @@ jobs:
       DATABASE: ${{ vars.DATABASE }}
       API_KEY: ${{ vars.API_KEY }}
       CORS_ALLOWED_ORIGINS: ${{ vars.CORS_ALLOWED_ORIGINS }}
+      INTERNAL_IPS: ${{ vars.INTERNAL_IPS }}
+      DJANGO_SETTINGS_MODULE: ${{ vars.DJANGO_SETTINGS_MODULE }}
+      PYTHONPATH: ${{ vars.PYTHONPATH }}
     services:
       postgres:
         image: postgres:15.1

@@ -16,7 +16,7 @@ def test_get_with_no_query_params(api_client):
 
 def test_get_with_only_search_query_param(api_client):
     # given
-    search = "Game"
+    search = "Game of Thrones"
     expected_response = requests.get(BASE_OMDB_URL + f"&s={search}")
     # when
     test_response = api_client.get(reverse("watchlists_app:search"), {"search": search})
@@ -27,7 +27,7 @@ def test_get_with_only_search_query_param(api_client):
 
 def test_get_with_search_and_year_query_params(api_client):
     # given
-    search = "Game"
+    search = "Game of Thrones"
     year = 2016
     expected_response = requests.get(BASE_OMDB_URL + f"&s={search}&y={year}")
     # when
@@ -39,7 +39,7 @@ def test_get_with_search_and_year_query_params(api_client):
 
 def test_get_with_search_and_page_query_params(api_client):
     # given
-    search = "Game"
+    search = "Game of Thrones"
     page = 4
     expected_response = requests.get(BASE_OMDB_URL + f"&s={search}&page={page}")
     # when

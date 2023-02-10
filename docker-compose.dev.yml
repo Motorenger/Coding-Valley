@@ -12,12 +12,26 @@ services:
       - ./config/.env/env.dev
     depends_on:
       - db
+      - redis
   db:
     image: postgres:15.1
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./config/db/database-env
+  redis:
+    image: redis:alpine
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: celery -A app.base worker -l INFO
+    volumes:
+      - ./app/:/usr/src/app/app/
+    env_file:
+      - ./config/.env/env.dev
+    depends_on:
+      - redis
 
 volumes:
   postgres_data:
