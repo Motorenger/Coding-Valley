@@ -76,7 +76,7 @@ class ProfileView(RetrieveAPIView):
     serializer_class = UserSerializer
 
     @method_decorator(vary_on_cookie)
-    @method_decorator(cache_page(60*60))
+    @method_decorator(cache_page(60*60*24*90, key_prefix='userprofile_cache'))
     def get(self, *args, **kwargs):
         return super().get(*args, **kwargs)
 
