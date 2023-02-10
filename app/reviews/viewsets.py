@@ -1,3 +1,5 @@
+from django.db import IntegrityError
+from django.http import Http404
 from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import GenericViewSet
@@ -36,4 +38,7 @@ class ReviewLikeViewSet(mixins.CreateModelMixin,
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrIsAdminOrReadOnly]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        try:
+            serializer.save(user=self.request.user)
+        except IntegrityError:
+            raise Http404
