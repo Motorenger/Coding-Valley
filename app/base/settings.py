@@ -5,6 +5,7 @@ from datetime import timedelta
 from pathlib import Path
 
 import base.tasks
+
 from celery.schedules import crontab
 
 
@@ -12,7 +13,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = int(os.environ.get("DEBUG", default=0))
+DEBUG = int(os.environ.get("DEBUG"))
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
@@ -192,6 +193,10 @@ LOGGING = {
         },
     },
     'loggers': {
+        'root': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
         'django': {
             'handlers': ['console'],
             'level': 'INFO',
@@ -204,10 +209,10 @@ LOGGING = {
     },
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s | %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
         },
         'simple': {
-            'format': '%(levelname)s %(message)s'
+            'format': '%(levelname)s | %(message)s'
         },
         'django.server': {
             '()': 'django.utils.log.ServerFormatter',
