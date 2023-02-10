@@ -45,4 +45,4 @@ jobs:
         run: |
           . venv/bin/activate
           flake8 --statistics app
-          pytest -v app
+          pytest -v -n auto app
