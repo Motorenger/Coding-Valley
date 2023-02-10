@@ -5,6 +5,7 @@ from datetime import timedelta
 from pathlib import Path
 
 import base.tasks
+
 from celery.schedules import crontab
 
 
@@ -192,6 +193,10 @@ LOGGING = {
         },
     },
     'loggers': {
+        'root': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
         'django': {
             'handlers': ['console'],
             'level': 'INFO',
@@ -204,10 +209,10 @@ LOGGING = {
     },
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s | %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
         },
         'simple': {
-            'format': '%(levelname)s %(message)s'
+            'format': '%(levelname)s | %(message)s'
         },
         'django.server': {
             '()': 'django.utils.log.ServerFormatter',
