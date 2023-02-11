@@ -1,7 +1,5 @@
-venv
 Dockerfile
-docker-compose.yaml
-README.md
+docker-compose.yml
 config
 __pycache__
 .git
