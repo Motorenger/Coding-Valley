@@ -19,14 +19,6 @@ class ReviewViewSet(mixins.CreateModelMixin,
     queryset = Review.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrIsAdminOrReadOnly]
 
-    @method_decorator(cache_page(60*60*48, key_prefix='reviews_viewset'))
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-    @method_decorator(cache_page(60*60*72, key_prefix='review_viewset'))
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
