@@ -6,6 +6,8 @@ django_debug_toolbar==3.8.1
 django-cors-headers==3.13.0
 requests==2.28.2
 pytest-django==4.5.2
+pytest-xdist==3.2.0
+pytest-mock==3.10.0
 model-bakery==1.10.1
 flake8==6.0.0
 shortuuid==1.0.11

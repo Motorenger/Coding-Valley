@@ -1,3 +1,5 @@
+from django.db import IntegrityError
+from django.http import Http404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_cookie
@@ -16,14 +18,6 @@ class ReviewViewSet(mixins.CreateModelMixin,
                     GenericViewSet):
     queryset = Review.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrIsAdminOrReadOnly]
-
-    @method_decorator(cache_page(60*60*48, key_prefix='reviews_viewset'))
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-    @method_decorator(cache_page(60*60*72, key_prefix='review_viewset'))
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -47,4 +41,7 @@ class ReviewLikeViewSet(mixins.CreateModelMixin,
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrIsAdminOrReadOnly]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        try:
+            serializer.save(user=self.request.user)
+        except IntegrityError:
+            raise Http404

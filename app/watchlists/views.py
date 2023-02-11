@@ -51,6 +51,7 @@ class GetByOmdbIdView(RetrieveAPIView):
     def get_serializer_context(self):
         context = {}
         context["imdb_rating"] = self.request.query_params.get("imdb_rating", None)
+        context["request"] = self.request
         return context
 
 
