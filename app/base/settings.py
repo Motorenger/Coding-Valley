@@ -5,6 +5,7 @@ from datetime import timedelta
 from pathlib import Path
 
 import base.tasks
+
 from celery.schedules import crontab
 
 
@@ -192,6 +193,10 @@ LOGGING = {
         },
     },
     'loggers': {
+        'root': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
         'django': {
             'handlers': ['console'],
             'level': 'INFO',
@@ -204,10 +209,10 @@ LOGGING = {
     },
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s | %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
         },
         'simple': {
-            'format': '%(levelname)s %(message)s'
+            'format': '%(levelname)s | %(message)s'
         },
         'django.server': {
             '()': 'django.utils.log.ServerFormatter',
@@ -216,24 +221,20 @@ LOGGING = {
     },
 }
 
+REDIS_HOST = os.environ.get("REDIS_HOST")
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
+        "LOCATION": f"redis://{REDIS_HOST}:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
 }
 
-CELERY_BROKER_URL = "redis://redis:6379"
-CELERY_RESULT_BACKEND = "redis://redis:6379"
-CELERY_BEAT_SCHEDULE = {
-    "sample_task": {
-        "task": "base.tasks.sample_task",
-        "schedule": crontab(minute="*/1"),
-    },
-}
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:6379"
+CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:6379"
 
 if DEBUG:
     MIDDLEWARE += (
