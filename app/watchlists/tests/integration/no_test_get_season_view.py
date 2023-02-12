@@ -84,6 +84,7 @@ def test_get_with_imdb_id_and_season_and_imdb_rating_query_params(api_client, se
         assert episode.get('imdb_rating') >= float(imdb_rating)
     assert test_response.status_code == 200, "Status code of response must be 200"
 
+
 def test_post(api_client):
     # when
     test_response = api_client.post(reverse("watchlists_app:get_season_by_omdbid"))
@@ -108,3 +109,5 @@ def test_patch(api_client):
 def test_delete(api_client):
     # when
     test_response = api_client.delete(reverse("watchlists_app:get_season_by_omdbid"))
+    # then
+    assert test_response.status_code == 405, "Status code of response must be 405"

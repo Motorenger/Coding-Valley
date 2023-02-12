@@ -65,7 +65,7 @@ def save_series(imdb_id):
     series.save()
 
     try:
-        download_episodes.delay(series.id).get()
+        download_episodes.delay(series).get()
     except Exception as e:
         logger.error(f'detail: {e}')
 

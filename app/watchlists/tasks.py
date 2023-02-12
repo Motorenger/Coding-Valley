@@ -9,9 +9,8 @@ from watchlists.models import Series, Season, Episode
 
 
 @shared_task
-def download_episodes(series_id):
+def download_episodes(series):
     session = requests.Session()
-    series = Series.objects.get(id=series_id)
     for season_number in range(1, int(series.total_seasons) + 1):
         season_data = req.get_season_by_omdbid(series.imdb_id, season_number, session)
         needed_data = {}
