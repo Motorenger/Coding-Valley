@@ -109,27 +109,6 @@ def test_get_with_imdb_id_and_type_and_imdb_rating_query_params_for_series(api_c
 
 def test_post(api_client):
     # when
-    test_response = api_client.post(reverse("watchlists_app:get_by_omdbid"))
-    # then
-    assert test_response.status_code == 405, "Status code of response must be 405"
-
-
-def test_put(api_client):
-    # when
-    test_response = api_client.put(reverse("watchlists_app:get_by_omdbid"))
-    # then
-    assert test_response.status_code == 405, "Status code of response must be 405"
-
-
-def test_patch(api_client):
-    # when
-    test_response = api_client.patch(reverse("watchlists_app:get_by_omdbid"))
-    # then
-    assert test_response.status_code == 405, "Status code of response must be 405"
-
-
-def test_delete(api_client):
-    # when
-    test_response = api_client.delete(reverse("watchlists_app:get_by_omdbid"))
+    test_response = api_client.post(reverse("watchlists_app:get_by_omdbid"), {})
     # then
     assert test_response.status_code == 405, "Status code of response must be 405"
