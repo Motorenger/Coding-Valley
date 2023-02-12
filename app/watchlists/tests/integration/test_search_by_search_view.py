@@ -74,6 +74,27 @@ def test_get_with_search_and_year_and_page_query_params(api_client):
 
 def test_post(api_client):
     # when
-    test_response = api_client.post(reverse("watchlists_app:search"), {})
+    test_response = api_client.post(reverse("watchlists_app:search"))
+    # then
+    assert test_response.status_code == 405, "Status code of response must be 405"
+
+
+def test_put(api_client):
+    # when
+    test_response = api_client.put(reverse("watchlists_app:search"))
+    # then
+    assert test_response.status_code == 405, "Status code of response must be 405"
+
+
+def test_patch(api_client):
+    # when
+    test_response = api_client.patch(reverse("watchlists_app:search"))
+    # then
+    assert test_response.status_code == 405, "Status code of response must be 405"
+
+
+def test_delete(api_client):
+    # when
+    test_response = api_client.delete(reverse("watchlists_app:search"))
     # then
     assert test_response.status_code == 405, "Status code of response must be 405"
