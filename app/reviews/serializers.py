@@ -23,7 +23,11 @@ class ReviewSerializer(serializers.ModelSerializer):
         return obj.users_liked.filter(like=False).count()
 
     def get_current_user_reviewlike(self, obj):
-        current_user = self.context['request'].user
+        request = self.context.get('request')
+        if request is None:
+            return None
+
+        current_user = request.user
         if not current_user.is_authenticated:
             return None
 
@@ -31,6 +35,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             reviewlike = obj.users_liked.get(user=current_user)
         except ReviewLikes.DoesNotExist:
             return None
+
         return {'id': reviewlike.id, 'like': reviewlike.like}
 
 

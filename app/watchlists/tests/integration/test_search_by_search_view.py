@@ -16,10 +16,10 @@ def test_get_with_no_query_params(api_client):
 
 def test_get_with_only_search_query_param(api_client):
     # given
-    search = "Game"
+    search = "Game of Thrones"
+    expected_response = requests.get(BASE_OMDB_URL + f"&s={search}")
     # when
     test_response = api_client.get(reverse("watchlists_app:search"), {"search": search})
-    expected_response = requests.get(BASE_OMDB_URL + f"&s={search}")
     # then
     assert test_response.json() == expected_response.json(), "The test response is not equal to expected response"
     assert test_response.status_code == 200, "Status code of response must be 200"
@@ -27,11 +27,11 @@ def test_get_with_only_search_query_param(api_client):
 
 def test_get_with_search_and_year_query_params(api_client):
     # given
-    search = "Game"
+    search = "Game of Thrones"
     year = 2016
+    expected_response = requests.get(BASE_OMDB_URL + f"&s={search}&y={year}")
     # when
     test_response = api_client.get(reverse("watchlists_app:search"), {"search": search, "year": year})
-    expected_response = requests.get(BASE_OMDB_URL + f"&s={search}&y={year}")
     # then
     assert test_response.json() == expected_response.json(), "The test response is not equal to expected response"
     assert test_response.status_code == 200, "Status code of response must be 200"
@@ -39,11 +39,11 @@ def test_get_with_search_and_year_query_params(api_client):
 
 def test_get_with_search_and_page_query_params(api_client):
     # given
-    search = "Game"
+    search = "Game of Thrones"
     page = 4
+    expected_response = requests.get(BASE_OMDB_URL + f"&s={search}&page={page}")
     # when
     test_response = api_client.get(reverse("watchlists_app:search"), {"search": search, "page": page})
-    expected_response = requests.get(BASE_OMDB_URL + f"&s={search}&page={page}")
     # then
     assert test_response.json() == expected_response.json(), "The test response is not equal to expected response"
     assert test_response.status_code == 200, "Status code of response must be 200"
@@ -64,9 +64,9 @@ def test_get_with_search_and_year_and_page_query_params(api_client):
     search = "Game"
     year = 2016
     page = 4
+    expected_response = requests.get(BASE_OMDB_URL + f"&s={search}&y={year}&page={page}")
     # when
     test_response = api_client.get(reverse("watchlists_app:search"), {"search": search, "year": year, "page": page})
-    expected_response = requests.get(BASE_OMDB_URL + f"&s={search}&y={year}&page={page}")
     # then
     assert test_response.json() == expected_response.json(), "The test response is not equal to expected response"
     assert test_response.status_code == 200, "Status code of response must be 200"

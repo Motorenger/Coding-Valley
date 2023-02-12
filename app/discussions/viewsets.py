@@ -38,10 +38,6 @@ class CommentViewSet(mixins.CreateModelMixin,
     queryset = Comment.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrIsAdminOrReadOnly]
 
-    @method_decorator(cache_page(60*60*24, key_prefix='comments_viewset'))
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
