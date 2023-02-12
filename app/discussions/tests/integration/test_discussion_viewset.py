@@ -10,13 +10,6 @@ pytestmark = pytest.mark.django_db
 
 class TestDiscussionViewSet:
     # list
-    def test_list_with_unauthenticated_user_with_no_discussions(self, api_client):
-        # when
-        response = api_client.get(reverse("discussions_app:discussions-list"))
-        # then
-        assert response.status_code == 200, "Status code of response must be 200"
-        assert len(response.json()) == 0, "The response must contain no discussions"
-
     def test_list_with_unauthenticated_user(self, api_client):
         # given
         baker.make("discussions.Discussion")

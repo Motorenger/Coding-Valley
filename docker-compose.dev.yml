@@ -24,12 +24,12 @@ services:
   celery:
     build:
       context: .
-      dockerfile: Dockerfile.dev
-    command: celery -A app.base worker -l INFO
-    volumes:
-      - ./app/:/usr/src/app/app/
+      dockerfile: ./config/celery/Dockerfile
+    command: celery -A base worker -l INFO
     env_file:
       - ./config/.env/env.dev
+    volumes:
+      - ./app/:/usr/src/app/app/
     depends_on:
       - redis
 

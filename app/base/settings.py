@@ -4,8 +4,6 @@ import socket
 from datetime import timedelta
 from pathlib import Path
 
-import base.tasks
-
 from celery.schedules import crontab
 
 
