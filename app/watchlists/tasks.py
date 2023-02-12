@@ -28,12 +28,16 @@ def download_episodes(series):
             needed_data['title'] = episode_data['Title']
             needed_data['released'] = datetime.datetime.strptime(episode_data['Released'], '%d %b %Y').date()
             needed_data['episode_numb'] = episode_data['Episode']
-            needed_data['runtime'] = episode_data['Runtime'].split(" ")[0]
             needed_data['plot'] = episode_data['Plot']
             needed_data['poster'] = episode_data['Poster']
+
             imdb_rating = episode_data['imdbRating']
             if imdb_rating not in ["N/A"]:
                 needed_data['imdb_rating'] = imdb_rating
+
+            runtime = episode_data['Runtime'].split(" ")[0]
+            if runtime not in ["N/A"]:
+                needed_data['runtime'] = runtime
 
             episode = Episode(season=season, **needed_data)
             episodes.append(episode)
