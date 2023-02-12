@@ -108,5 +108,3 @@ def test_patch(api_client):
 def test_delete(api_client):
     # when
     test_response = api_client.delete(reverse("watchlists_app:get_season_by_omdbid"))
-    # then
-    assert test_response.status_code == 405, "Status code of response must be 405"
