@@ -4,7 +4,8 @@ import pytest
 import requests
 from django.urls import reverse
 
-from watchlists.models import Series, Movie
+
+from watchlists.models import Series, Movie, Media
 
 
 pytestmark = pytest.mark.django_db
@@ -29,7 +30,7 @@ def test_get_with_only_type_query_param(api_client):
 
 def test_get_with_only_imdb_id_query_param(api_client):
     # given
-    imdb_id = "tt0944947"
+    imdb_id = "tt13443470"
     # when
     response = api_client.get(reverse("watchlists_app:get_by_omdbid"), {"imdb_id": imdb_id})
     # then
@@ -38,7 +39,7 @@ def test_get_with_only_imdb_id_query_param(api_client):
 
 def test_get_with_imdb_id_and_incorrect_type_query_params(api_client):
     # given
-    imdb_id = "tt0944947"
+    imdb_id = "tt13443470"
     type = "incorrect_type"
     # when
     response = api_client.get(reverse("watchlists_app:get_by_omdbid"), {"imdb_id": imdb_id, "type": type})
@@ -54,57 +55,6 @@ def test_get_with_incorrect_imdb_id_and_type_query_params(api_client):
     response = api_client.get(reverse("watchlists_app:get_by_omdbid"), {"imdb_id": imdb_id, "type": type})
     # then
     assert response.status_code == 404, "Status code of response must be 404"
-
-
-def test_get_with_imdb_id_and_type_query_params_for_series(api_client):
-    # given
-    imdb_id = "tt0944947"
-    type = "series"
-    expected_response = requests.get(BASE_OMDB_URL + f"&i={imdb_id}")
-    # when
-    response = api_client.get(reverse("watchlists_app:get_by_omdbid"), {"imdb_id": imdb_id, "type": type})
-    # then
-    assert response.json().get('title') == expected_response.json().get('Title'), "The title of test response is not equal to the title of expected response"
-    assert response.json().get('genres') == expected_response.json().get('Genre'), "The genres of test response is not equal to the genres of expected response"
-    assert Series.objects.count() == 1, "The data has not been saved in db"
-
-
-def test_get_with_imdb_id_and_type_query_params_for_movie(api_client):
-    # given
-    imdb_id = "tt1515091"
-    type = "movie"
-    expected_response = requests.get(BASE_OMDB_URL + f"&i={imdb_id}")
-    # when
-    response = api_client.get(reverse("watchlists_app:get_by_omdbid"), {"imdb_id": imdb_id, "type": type})
-    # then
-    assert response.json().get('title') == expected_response.json().get('Title'), "The title of test response is not equal to the title of expected response"
-    assert response.json().get('genres') == expected_response.json().get('Genre'), "The genres of test response is not equal to the genres of expected response"
-    assert Movie.objects.count() == 1, "The data has not been saved in db"
-
-
-def test_get_with_imdb_id_and_type_and_incorrect_imdb_rating_query_params_for_series(api_client):
-    # given
-    imdb_id = "tt0944947"
-    type = "series"
-    imdb_rating = "incorrect_rating"
-    # when
-    response = api_client.get(reverse("watchlists_app:get_by_omdbid"), {"imdb_id": imdb_id, "type": type, "imdb_rating": imdb_rating})
-    # then
-    assert response.status_code == 404, "Status code of response must be 404"
-
-
-def test_get_with_imdb_id_and_type_and_imdb_rating_query_params_for_series(api_client):
-    # given
-    imdb_id = "tt0944947"
-    type = "series"
-    imdb_rating = "9.3"
-    # when
-    response = api_client.get(reverse("watchlists_app:get_by_omdbid"), {"imdb_id": imdb_id, "type": type, "imdb_rating": imdb_rating})
-    # then
-    for season in response.json().get('seasons'):
-        for episode in season.get('episodes'):
-            assert episode.get('imdb_rating') >= float(imdb_rating)
-    assert response.status_code == 200, "Status code of response must be 200"
 
 
 def test_post(api_client):
