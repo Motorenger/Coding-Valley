@@ -8,9 +8,6 @@ from notifications.serializers import NotificationSerializer
 
 
 class GetNotificationView(APIView):
-    """
-    Follow user with notification to followed user
-    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -24,17 +21,14 @@ class GetNotificationView(APIView):
 
 
 class ReadNotificationView(APIView):
-    """
-    Follow user with notification to followed user
-    """
     permission_classes = [IsAuthenticated]
 
-    def put(self, request, uuid):
+    def post(self, request, uuid):
         try:
             if (notification := Notification.objects.get(id=uuid)).to_user == request.user:
                 notification.delete()
-                return Response('Marked as read', status=status.HTTP_204_NO_CONTENT)
+                return Response({'detail': 'Notification marked as read.'}, status=status.HTTP_204_NO_CONTENT)
             else:
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'detail': 'Something went wrong, please try again.'}, status=status.HTTP_401_UNAUTHORIZED)
         except Exception as e:
-            return Response({"details": f"{e}"}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"details": f'{e}'}, status=status.HTTP_204_NO_CONTENT)

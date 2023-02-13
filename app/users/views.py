@@ -99,6 +99,7 @@ class GoogleAuthView(APIView):
             user.email = data['email']
             user.first_name = data['given_name']
             user.last_name = data['family_name']
+            user.email_verified = True
             user.password = make_password(UserManager().make_random_password())
             user.save()
 
