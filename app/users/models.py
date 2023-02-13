@@ -4,9 +4,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext as _
 
-from watchlists.models import Media
-from users.utils import generate_username
 from users.managers import UserManager
+from users.utils import generate_username
+from watchlists.models import Media
 
 
 class User(AbstractUser):
@@ -48,3 +48,6 @@ class UserProfile(models.Model):
     class Meta:
         verbose_name = _("Profile")
         verbose_name_plural = _("Profiles")
+
+    def __str__(self):
+        return f'{self.user.username} | {self.user.email}'

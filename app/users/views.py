@@ -1,26 +1,28 @@
 import logging
 
+import requests
+
+from django.contrib.auth.hashers import make_password
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_cookie
 from rest_framework import status
-from rest_framework.generics import (CreateAPIView, RetrieveAPIView,
-                                     UpdateAPIView)
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.utils import json
 from rest_framework.views import APIView
-
-from rest_framework_simplejwt.token_blacklist.models import (BlacklistedToken,
-                                                             OutstandingToken)
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from users.managers import UserManager
 from users.models import User
-from watchlists.models import Media
+from users.serializers import (ChangePasswordSerializer, RegisterSerializer,
+                               UpdateProfileSerializer, UserProfileSerializer,
+                               UserSerializer, UserTokenObtainPairSerializer)
 from notifications.models import Notification
-from users.serializers import (ChangePasswordSerializer, UserSerializer, UserProfileSerializer,
-                               RegisterSerializer, UpdateProfileSerializer,
-                               UserTokenObtainPairSerializer)
+from watchlists.models import Media
 
 
 logger = logging.getLogger(__name__)
@@ -38,7 +40,8 @@ class RegisterView(CreateAPIView):
 
 class LogoutView(APIView):
     """
-    Implements logout on current session
+    Logout user from current session
+    using blacklist RefreshToken method.
     """
     permission_classes = [IsAuthenticated]
 
@@ -55,7 +58,8 @@ class LogoutView(APIView):
 
 class LogoutAllView(APIView):
     """
-    Implements logout on all devices
+    Logout user from all sessions
+    using blacklist OutstandigToken method.
     """
     permission_classes = [IsAuthenticated]
 
@@ -70,6 +74,37 @@ class LogoutAllView(APIView):
         except Exception as e:
             logger.error(f'users/logout_all: {e}')
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class GoogleView(APIView):
+    """
+    Sign in or Sign up user using OAuth2.
+    """
+    def post(self, request):
+        payload = {'access_token': request.data.get("token")}
+        request = requests.get('https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
+
+        if 'error' in (data := json.loads(request.text)):
+            response = {'message': 'wrong google token / this google token is already expired.'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=data['email'])
+        except User.DoesNotExist:
+            user = User()
+            user.email = data['email']
+            user.first_name = data['given_name']
+            user.last_name = data['family_name']
+            user.password = make_password(UserManager().make_random_password())
+            user.save()
+
+        token = RefreshToken.for_user(user)
+        response = {}
+        response['email'] = user.email
+        response['username'] = user.username
+        response['access_token'] = str(token.access_token)
+        response['refresh_token'] = str(token)
+        return Response(response, status=status.HTTP_302_FOUND)
 
 
 class ProfileView(RetrieveAPIView):
@@ -117,7 +152,7 @@ class FollowView(APIView):
             to_user = User.objects.get(username=username)
             profile = to_user.userprofile
             if user == to_user:
-                return Response('You can’ follow yourself', status=status.HTTP_400_BAD_REQUEST)
+                return Response('You can’t follow yourself', status=status.HTTP_400_BAD_REQUEST)
 
             if user in profile.followers.all():
                 profile.followers.remove(user)
