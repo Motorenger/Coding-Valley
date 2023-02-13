@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import users.utils
+from users.services.generate_username import generate_username
 import uuid
 
 
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('password', models.CharField(max_length=128, verbose_name='password')),
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('id', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False, unique=True)),
-                ('username', models.CharField(default=users.utils.generate_username, max_length=50, unique=True)),
+                ('username', models.CharField(default=generate_username, max_length=50, unique=True)),
                 ('first_name', models.CharField(max_length=100, null=False, blank=False)),
                 ('last_name', models.CharField(max_length=100,  null=False, blank=False)),
                 ('email', models.EmailField(max_length=255, unique=True, verbose_name='email address')),
