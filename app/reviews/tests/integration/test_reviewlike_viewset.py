@@ -2,7 +2,7 @@ import pytest
 from django.urls import reverse
 from model_bakery import baker
 
-from reviews.models import ReviewLikes
+from reviews.models import Review, ReviewLikes
 
 
 pytestmark = pytest.mark.django_db
@@ -58,10 +58,9 @@ class TestReviewLikesViewSet:
         reviewlike = {"review": review.id, "like": "true"}
         # when
         response = api_client.post(reverse("reviews_app:reviewlikes-list"), reviewlike)
-        reviewlikes_number = ReviewLikes.objects.count()
         # then
         assert response.status_code == 401, "Status code of response must be 401"
-        assert reviewlikes_number == 0, "There must be no reviewlikes"
+        assert ReviewLikes.objects.count() == 0, "The db must contain no reviewlikes"
 
     def test_create_with_authenticated_user(self, api_client, user):
         # given
@@ -70,11 +69,10 @@ class TestReviewLikesViewSet:
         api_client.force_authenticate(user=user)
         # when
         response = api_client.post(reverse("reviews_app:reviewlikes-list"), reviewlike)
-        reviewlikes_number = ReviewLikes.objects.count()
         # then
         assert response.status_code == 201, "Status code of response must be 201"
         assert response.json().get('user') == str(user.id), "The response object must belong to the given user"
-        assert reviewlikes_number == 1, "There must be one reviewlike"
+        assert ReviewLikes.objects.count() == 1, "The db must contain one reviewlike"
 
     # update
     def test_update_with_unauthenticated_user(self, api_client, owner):
@@ -197,10 +195,9 @@ class TestReviewLikesViewSet:
         reviewlike.save()
         # when
         response = api_client.delete(reverse("reviews_app:reviewlikes-detail", args=(reviewlike.id,)))
-        reviewlikes_number = ReviewLikes.objects.count()
         # then
         assert response.status_code == 401, "Status code of response must be 401"
-        assert reviewlikes_number == 1, "There must be one reviewlike"
+        assert ReviewLikes.objects.count() == 1, "The db must contain one reviewlike"
 
     def test_destroy_with_not_owner(self, api_client, owner, not_owner):
         # given
@@ -211,10 +208,9 @@ class TestReviewLikesViewSet:
         api_client.force_authenticate(user=not_owner)
         # when
         response = api_client.delete(reverse("reviews_app:reviewlikes-detail", args=(reviewlike.id,)))
-        reviewlikes_number = ReviewLikes.objects.count()
         # then
         assert response.status_code == 403, "Status code of response must be 403"
-        assert reviewlikes_number == 1, "There must be one reviewlike"
+        assert ReviewLikes.objects.count() == 1, "The db must contain one reviewlike"
 
     def test_destroy_with_owner(self, api_client, owner):
         # given
@@ -225,10 +221,9 @@ class TestReviewLikesViewSet:
         api_client.force_authenticate(user=owner)
         # when
         response = api_client.delete(reverse("reviews_app:reviewlikes-detail", args=(reviewlike.id,)))
-        reviewlikes_number = ReviewLikes.objects.count()
         # then
         assert response.status_code == 204, "Status code of response must be 204"
-        assert reviewlikes_number == 0, "There must be no reviewlikes"
+        assert ReviewLikes.objects.count() == 0, "The db must contain no reviewlikes"
 
     def test_destroy_with_admin(self, api_client, owner, admin):
         # given
@@ -239,7 +234,6 @@ class TestReviewLikesViewSet:
         api_client.force_authenticate(user=admin)
         # when
         response = api_client.delete(reverse("reviews_app:reviewlikes-detail", args=(reviewlike.id,)))
-        reviewlikes_number = ReviewLikes.objects.count()
         # then
         assert response.status_code == 204, "Status code of response must be 204"
-        assert reviewlikes_number == 0, "There must be no reviewlikes"
+        assert ReviewLikes.objects.count() == 0, "The db must contain no reviewlikes"
