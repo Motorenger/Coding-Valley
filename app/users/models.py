@@ -4,16 +4,16 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext as _
 
-from watchlists.models import Media
-from users.utils import generate_username
 from users.managers import UserManager
+from users.utils import generate_username
+from watchlists.models import Media
 
 
 class User(AbstractUser):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True)
     username = models.CharField(default=generate_username, max_length=50, unique=True)
-    first_name = models.CharField(max_length=100, null=True)
-    last_name = models.CharField(max_length=100, null=True)
+    first_name = models.CharField(max_length=100, null=False, blank=False)
+    last_name = models.CharField(max_length=100, null=False, blank=False)
     email = models.EmailField(verbose_name="email address", max_length=255, unique=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
@@ -30,10 +30,7 @@ class User(AbstractUser):
         verbose_name = _("User")
         verbose_name_plural = _("Users")
 
-    def get_username(self):
-        return self.username
-
-    def get_email(self):
+    def __str__(self):
         return self.email
 
 
@@ -48,3 +45,6 @@ class UserProfile(models.Model):
     class Meta:
         verbose_name = _("Profile")
         verbose_name_plural = _("Profiles")
+
+    def __str__(self):
+        return f'{self.user.username} | {self.user.email}'

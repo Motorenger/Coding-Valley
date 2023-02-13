@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from watchlists.models import Media, Movie, Series
 from watchlists.serializers import MovieSerializer, SeriesSerializer, SeasonSerializer, MediaSerializer
 from watchlists.services import omdb_requests, db_saving
+from watchlists.utills import validate_imdb_rating
 
 
 @api_view()
@@ -50,7 +51,8 @@ class GetByOmdbIdView(RetrieveAPIView):
 
     def get_serializer_context(self):
         context = {}
-        context["imdb_rating"] = self.request.query_params.get("imdb_rating", None)
+        imdb_rating = validate_imdb_rating(self.request.query_params.get("imdb_rating", None))
+        context["imdb_rating"] = imdb_rating
         context["request"] = self.request
         return context
 
@@ -59,9 +61,14 @@ class GetSeason(RetrieveAPIView):
     serializer_class = SeasonSerializer
 
     def get_object(self):
-        imdb_id = self.request.query_params["imdb_id"]
-        season_number = self.request.query_params["season"]
-        series = Series.objects.get(imdb_id=imdb_id)
+        imdb_id = self.request.query_params.get("imdb_id")
+        season_number = self.request.query_params.get("season")
+        if not all([imdb_id, season_number]):
+            raise Http404
+        try:
+            series = Series.objects.get(imdb_id=imdb_id)
+        except Series.DoesNotExist:
+            raise Http404
         season = series.seasons.get(season_numb=season_number)
         return season
 
