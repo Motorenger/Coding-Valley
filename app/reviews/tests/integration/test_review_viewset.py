@@ -58,10 +58,9 @@ class TestReviewViewSet:
         review = {"media": media.id, "title": "some title", "content": "some content", "stars": 5}
         # when
         response = api_client.post(reverse("reviews_app:reviews-list"), review)
-        reviews_number = Review.objects.count()
         # then
         assert response.status_code == 401, "Status code of response must be 401"
-        assert reviews_number == 0, "There must be no reviews"
+        assert Review.objects.count() == 0, "The db must contain no reviews"
 
     def test_create_with_authenticated_user(self, api_client, user):
         # given
@@ -70,11 +69,10 @@ class TestReviewViewSet:
         api_client.force_authenticate(user=user)
         # when
         response = api_client.post(reverse("reviews_app:reviews-list"), review)
-        reviews_number = Review.objects.count()
         # then
         assert response.status_code == 201, "Status code of response must be 201"
         assert response.json().get('user') == str(user.id), "The response object must belong to the given user"
-        assert reviews_number == 1, "There must be one review"
+        assert Review.objects.count() == 1, "The db must contain one review"
 
     # update
     def test_update_with_unauthenticated_user(self, api_client, owner):
@@ -197,10 +195,9 @@ class TestReviewViewSet:
         review.save()
         # when
         response = api_client.delete(reverse("reviews_app:reviews-detail", args=(review.id,)))
-        reviews_number = Review.objects.count()
         # then
         assert response.status_code == 401, "Status code of response must be 401"
-        assert reviews_number == 1, "There must be one review"
+        assert Review.objects.count() == 1, "The db must contain one review"
 
     def test_destroy_with_not_owner(self, api_client, owner, not_owner):
         # given
@@ -211,10 +208,9 @@ class TestReviewViewSet:
         api_client.force_authenticate(user=not_owner)
         # when
         response = api_client.delete(reverse("reviews_app:reviews-detail", args=(review.id,)))
-        reviews_number = Review.objects.count()
         # then
         assert response.status_code == 403, "Status code of response must be 403"
-        assert reviews_number == 1, "There must be one review"
+        assert Review.objects.count() == 1, "The db must contain one review"
 
     def test_destroy_with_owner(self, api_client, owner):
         # given
@@ -225,10 +221,9 @@ class TestReviewViewSet:
         api_client.force_authenticate(user=owner)
         # when
         response = api_client.delete(reverse("reviews_app:reviews-detail", args=(review.id,)))
-        reviews_number = Review.objects.count()
         # then
         assert response.status_code == 204, "Status code of response must be 204"
-        assert reviews_number == 0, "There must be no reviews"
+        assert Review.objects.count() == 0, "The db must contain no reviews"
 
     def test_destroy_with_admin(self, api_client, owner, admin):
         # given
@@ -239,7 +234,6 @@ class TestReviewViewSet:
         api_client.force_authenticate(user=admin)
         # when
         response = api_client.delete(reverse("reviews_app:reviews-detail", args=(review.id,)))
-        reviews_number = Review.objects.count()
         # then
         assert response.status_code == 204, "Status code of response must be 204"
-        assert reviews_number == 0, "There must be no reviews"
+        assert Review.objects.count() == 0, "The db must contain no reviews"
