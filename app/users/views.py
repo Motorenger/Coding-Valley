@@ -1,5 +1,8 @@
 import logging
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 from rest_framework import status
 from rest_framework.generics import (CreateAPIView, RetrieveAPIView,
                                      UpdateAPIView)
@@ -71,6 +74,11 @@ class LogoutAllView(APIView):
 
 class ProfileView(RetrieveAPIView):
     serializer_class = UserSerializer
+
+    @method_decorator(vary_on_cookie)
+    @method_decorator(cache_page(60*60*24*90, key_prefix='userprofile_cache'))
+    def get(self, *args, **kwargs):
+        return super().get(*args, **kwargs)
 
     def get_object(self, **kwargs):
         return User.objects.get(username=self.kwargs['username'])

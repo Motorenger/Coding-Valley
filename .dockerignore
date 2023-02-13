@@ -6,4 +6,4 @@ __pycache__
 .gitignore
 .dockerignore
 .pytest_cache
-.circleci
+.github
