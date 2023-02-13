@@ -20,7 +20,7 @@ services:
       context: ./config/nginx/
       dockerfile: Dockerfile
     volumes:
-      - static_volume:/home/app/backend/staticfiles
+      - static_volume:/home/app/backend/app/staticfiles
     ports:
       - 80:80
     depends_on:
