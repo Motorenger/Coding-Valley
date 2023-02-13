@@ -3,7 +3,13 @@ import logging
 import requests
 
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.tokens import default_token_generator
+from django.core.files.storage import default_storage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_cookie
 from rest_framework import status
@@ -17,12 +23,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from users.managers import UserManager
-from users.models import User
+from users.models import User, UserProfile
 from users.serializers import (ChangePasswordSerializer, RegisterSerializer,
                                UpdateProfileSerializer, UserProfileSerializer,
                                UserSerializer, UserTokenObtainPairSerializer)
-from notifications.models import Notification
 from watchlists.models import Media
+from notifications.models import Notification
 
 
 logger = logging.getLogger(__name__)
@@ -200,3 +206,54 @@ class FavouritesView(APIView):
         except Exception as e:
             message = {'detail': f'{e}'}
             return Response(message, status=status.HTTP_204_NO_CONTENT)
+
+
+class SendEmailView(APIView):
+    """
+    Sends an activation link via email to requested user.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        if user.email_verified:
+            return Response('Your email is already activated', status=status.HTTP_403_FORBIDDEN)
+        try:
+            title = 'Verify your Valley account.'
+            message = render_to_string('verify-email.html', {
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+            })
+            to_email = user.email
+            email = EmailMultiAlternatives(title, message, to=[to_email])
+            email.attach_alternative(message, "text/html")
+            email.send()
+            return Response('Activation email was sent successfully.', status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f'Activation email: {e}')
+            return Response({'detail': f'{e}'}, status=status.HTTP_403_FORBIDDEN)
+
+
+class ActivateEmail(APIView):
+    """
+    Verifiy user email via link.
+    """
+
+    def get(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
+            user = None
+            logger.error(f'Activation email: {e}')
+
+        if user is None:
+            return Response('Something went wrong , please try again', status=status.HTTP_406_NOT_ACCEPTABLE)
+        if user.email_verified:
+            return Response('Your email is already verified.', status=status.HTTP_406_NOT_ACCEPTABLE)
+        if not default_token_generator.check_token(user, token):
+            return Response('Something went wrong, please try again', status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        user.email_verified = True
+        user.save()
+        return Response("You email was sucessfuly verified.")
