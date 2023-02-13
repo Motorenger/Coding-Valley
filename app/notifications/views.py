@@ -14,13 +14,11 @@ class GetNotificationView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        is_read = request.query_params.get("is_read")
-        if not is_read:
+        if not (is_read := request.query_params.get("is_read")):
             notifications = request.user.notifications.order_by("-created")
         else:
-            notifications = request.user.notifications.filter(is_read=is_read).order_by(
-                "-created"
-            )
+            notifications = request.user.notifications.filter(is_read=is_read).order_by("-created")
+
         serializer = NotificationSerializer(notifications, many=True)
         return Response(serializer.data)
 
@@ -33,8 +31,7 @@ class ReadNotificationView(APIView):
 
     def put(self, request, uuid):
         try:
-            notification = Notification.objects.get(id=uuid)
-            if notification.to_user == request.user:
+            if (notification := Notification.objects.get(id=uuid)).to_user == request.user:
                 notification.delete()
                 return Response('Marked as read', status=status.HTTP_204_NO_CONTENT)
             else:
