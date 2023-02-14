@@ -52,7 +52,7 @@ class LogoutView(APIView):
 
     def post(self, request):
         try:
-            refresh_token = request.data["refresh_token"]
+            refresh_token = request.data['refresh_token']
             token = RefreshToken(refresh_token)
             token.blacklist()
             return Response(status=status.HTTP_205_RESET_CONTENT)
@@ -85,7 +85,7 @@ class GoogleAuthView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        payload = {'access_token': request.data.get("token")}
+        payload = {'access_token': request.data.get('token')}
         request = requests.get('https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
         if 'error' in (data := json.loads(request.text)):
             return Response({'detail': 'Wrong google token or already expired.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -197,7 +197,7 @@ class SendEmailView(APIView):
                 'token': default_token_generator.make_token(user),
             })
             email = EmailMultiAlternatives(title, message, to=[user.email])
-            email.attach_alternative(message, "text/html")
+            email.attach_alternative(message, 'text/html')
             email.send()
             return Response({'detail': f'Email with activation link was sent to {user.email}'}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -240,7 +240,7 @@ class ResetSendEmailView(APIView):
                 'token': default_token_generator.make_token(user),
             })
             email = EmailMultiAlternatives(title, message, to=[user.email])
-            email.attach_alternative(message, "text/html")
+            email.attach_alternative(message, 'text/html')
             email.send()
             return Response({'detail': f'Email with reset link was sent to {user.email}'}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -264,8 +264,8 @@ class ResetPasswordView(APIView):
         if not default_token_generator.check_token(user, token):
             return Response({'detail': 'Something went wrong, please try again.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
         if (new_password := request.data.get('new_password')) != request.data.get('new_password2'):
-            return Response({"detail": 'Password doesn’t match'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response({'detail': 'Password doesn’t match'}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
         user.set_password(new_password)
         user.save()
-        return Response("Your password was reset successfuly!")
+        return Response('Your password was reset successfuly!')

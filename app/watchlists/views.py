@@ -30,20 +30,20 @@ class GetByOmdbIdView(RetrieveAPIView):
         return super().get(request, *args, **kwargs)
 
     def get_object(self):
-        type = self.request.query_params.get("type")
-        imdb_id = self.request.query_params.get("imdb_id")
+        type = self.request.query_params.get('type')
+        imdb_id = self.request.query_params.get('imdb_id')
         if not all([type, imdb_id]):
             raise Http404
-        if type == "movie":
+        if type == 'movie':
             try:
                 movie = Movie.objects.get(imdb_id=imdb_id)
             except Movie.DoesNotExist:
                 movie = db_saving.save_movie(imdb_id)
                 movie.save()
             return movie
-        elif type == "series":
+        elif type == 'series':
             try:
-                series = Series.objects.prefetch_related("seasons__episodes").get(imdb_id=imdb_id)
+                series = Series.objects.prefetch_related('seasons__episodes').get(imdb_id=imdb_id)
             except Series.DoesNotExist:
                 series = db_saving.save_series(imdb_id)
                 series.save()
@@ -51,17 +51,17 @@ class GetByOmdbIdView(RetrieveAPIView):
         raise Http404
 
     def get_serializer_class(self):
-        type = self.request.query_params["type"]
-        if type == "movie":
+        type = self.request.query_params['type']
+        if type == 'movie':
             return MovieSerializer
-        elif type == "series":
+        elif type == 'series':
             return SeriesSerializer
 
     def get_serializer_context(self):
         context = {}
-        imdb_rating = validate_imdb_rating(self.request.query_params.get("imdb_rating", None))
-        context["imdb_rating"] = imdb_rating
-        context["request"] = self.request
+        imdb_rating = validate_imdb_rating(self.request.query_params.get('imdb_rating', None))
+        context['imdb_rating'] = imdb_rating
+        context['request'] = self.request
         return context
 
 
@@ -69,8 +69,8 @@ class GetSeason(RetrieveAPIView):
     serializer_class = SeasonSerializer
 
     def get_object(self):
-        imdb_id = self.request.query_params.get("imdb_id")
-        season_number = self.request.query_params.get("season")
+        imdb_id = self.request.query_params.get('imdb_id')
+        season_number = self.request.query_params.get('season')
         if not all([imdb_id, season_number]):
             raise Http404
         try:
@@ -82,7 +82,7 @@ class GetSeason(RetrieveAPIView):
 
     def get_serializer_context(self):
         context = {}
-        context["imdb_rating"] = self.request.query_params.get("imdb_rating", None)
+        context['imdb_rating'] = self.request.query_params.get('imdb_rating', None)
         return context
 
 

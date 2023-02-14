@@ -29,7 +29,7 @@ class ReviewViewSet(mixins.CreateModelMixin,
 
     def get_serializer_context(self):
         context = {}
-        context["request"] = self.request
+        context['request'] = self.request
         return context
 
 

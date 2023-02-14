@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "first_name", "last_name", "username", "email", "profile")
+        fields = ('id', 'first_name', 'last_name', 'username', 'email', 'profile')
 
     def get_profile(self, obj):
         profile = obj.userprofile
@@ -25,15 +25,15 @@ class UserSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ("bio", "followers", "favourites")
+        fields = ('bio', 'followers', 'favourites')
 
 
 class UserTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token["username"] = user.username
-        token["email"] = user.email
+        token['username'] = user.username
+        token['email'] = user.email
         return token
 
     def validate(self, attrs):
@@ -51,12 +51,12 @@ class UserSerializerWithToken(UserSerializer):
 
     class Meta:
         model = User
-        exclude = ["password"]
+        exclude = ['password']
 
     def get_access(self, obj):
         token = RefreshToken.for_user(obj)
-        token["username"] = obj.username
-        token["email"] = obj.email
+        token['username'] = obj.username
+        token['email'] = obj.email
         return str(token.access_token)
 
     def get_refresh(self, obj):
@@ -78,46 +78,46 @@ class RegisterSerializer(UserSerializer):
     class Meta:
         model = User
         fields = (
-            "first_name",
-            "last_name",
-            "email",
-            "refresh",
-            "access",
-            "password",
-            "password2",
+            'first_name',
+            'last_name',
+            'email',
+            'refresh',
+            'access',
+            'password',
+            'password2',
         )
 
     def validate(self, attrs):
-        if any(char.isdigit() for char in attrs["first_name"]):
+        if any(char.isdigit() for char in attrs['first_name']):
             raise serializers.ValidationError(
-                {"first_name": "First name can only contain alphabet letters."}
+                {'first_name': 'First name can only contain alphabet letters.'}
             )
 
-        if any(char.isdigit() for char in attrs["last_name"]):
+        if any(char.isdigit() for char in attrs['last_name']):
             raise serializers.ValidationError(
-                {"last_name": "Last name can only contain alphabet letters."}
+                {'last_name': 'Last name can only contain alphabet letters.'}
             )
 
-        if attrs["password"] != attrs["password2"]:
+        if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError(
-                {"password": "Password fields didn't match."}
+                {'password': 'Password fields didn’t match.'}
             )
         return attrs
 
     def create(self, validated_data):
         user = User.objects.create(
-            first_name=validated_data["first_name"],
-            last_name=validated_data["last_name"],
-            email=validated_data["email"],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            email=validated_data['email'],
         )
-        user.set_password(validated_data["password"])
+        user.set_password(validated_data['password'])
         user.save()
         return user
 
     def get_access(self, obj):
         token = RefreshToken.for_user(obj)
-        token["username"] = obj.username
-        token["email"] = obj.email
+        token['username'] = obj.username
+        token['email'] = obj.email
         return str(token.access_token)
 
     def get_refresh(self, obj):
@@ -132,31 +132,31 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("new_password", "confirm_password", "old_password")
+        fields = ('new_password', 'confirm_password', 'old_password')
 
     def validate(self, attrs):
-        if attrs["new_password"] != attrs["confirm_password"]:
+        if attrs['new_password'] != attrs['confirm_password']:
             raise serializers.ValidationError(
-                {"password": "Password fields didn't match."}
+                {'password': 'Password fields didn’t match.'}
             )
         return attrs
 
     def validate_old_password(self, value):
-        user = self.context["request"].user
+        user = self.context['request'].user
         if not user.check_password(value):
             raise serializers.ValidationError(
-                {"old_password": "Old password is not correct"}
+                {'old_password': 'Old password is not correct'}
             )
         return value
 
     def update(self, instance, validated_data):
-        user = self.context["request"].user
+        user = self.context['request'].user
         if user.pk != instance.pk:
             raise serializers.ValidationError(
-                {"authorize": "You dont have permission for this user."}
+                {'authorize': 'You dont have permission for this user.'}
             )
 
-        instance.set_password(validated_data["new_password"])
+        instance.set_password(validated_data['new_password'])
         instance.save()
         return Response({'detail': 'Password was changed successfuly.'}, status=status.HTTP_200_OK)
 
@@ -167,32 +167,32 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("email", "username", "bio")
+        fields = ('email', 'username')
 
     def validate_email(self, value):
-        user = self.context["request"].user
+        user = self.context['request'].user
         if User.objects.exclude(id=user.id).filter(email=value).exists():
             raise serializers.ValidationError(
-                {"email": "This email is already in use."}
+                {'email': 'This email is already in use.'}
             )
         return value
 
     def validate_username(self, value):
-        user = self.context["request"].user
+        user = self.context['request'].user
         if User.objects.exclude(id=user.id).filter(username=value).exists():
             raise serializers.ValidationError(
-                {"username": "This username is already in use."}
+                {'username': 'This username is already in use.'}
             )
         return value
 
     def update(self, instance, validated_data):
-        user = self.context["request"].user
+        user = self.context['request'].user
         if user.id != instance.id:
             raise serializers.ValidationError(
-                {"authorize": "You only have permission to edit your own account."}
+                {'authorize': 'You only have permission to edit your own account.'}
             )
 
-        instance.email = validated_data["email"]
-        instance.username = validated_data["username"]
+        instance.email = validated_data['email']
+        instance.username = validated_data['username']
         instance.save()
         return instance

@@ -1,9 +1,8 @@
-import logging
-import datetime
 import asyncio
+import datetime
+import logging
 
 import requests
-
 
 from watchlists.services import omdb_requests as req
 from watchlists.models import Movie, Series, Season, Episode
@@ -80,7 +79,7 @@ def save_series(imdb_id):
         seasons_all.append(season)
 
         # prepare data for episodes
-        episodes = season_data["Episodes"]
+        episodes = season_data['Episodes']
         episodes = get_episode_data.delay(episodes).get()
         episodes_all = []
 
