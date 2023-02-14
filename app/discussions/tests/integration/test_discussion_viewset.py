@@ -55,10 +55,9 @@ class TestDiscussionViewSet:
         discussion = {'title': 'some title', 'content': 'some content'}
         # when
         response = api_client.post(reverse("discussions_app:discussions-list"), discussion)
-        discussions_number = Discussion.objects.count()
         # then
         assert response.status_code == 401, "Status code of response must be 401"
-        assert discussions_number == 0, "There must be no discussions"
+        assert Discussion.objects.count() == 0, "The db must contain no discussions"
 
     def test_create_with_authenticated_user(self, api_client, user):
         # given
@@ -66,11 +65,10 @@ class TestDiscussionViewSet:
         api_client.force_authenticate(user=user)
         # when
         response = api_client.post(reverse("discussions_app:discussions-list"), discussion)
-        discussions_number = Discussion.objects.count()
         # then
         assert response.status_code == 201, "Status code of response must be 201"
         assert response.json().get('user') == str(user.id), "The response object must belong to the given user"
-        assert discussions_number == 1, "There must be one discussion"
+        assert Discussion.objects.count() == 1, "The db must contain one discussion"
 
     # update
     def test_update_with_unauthenticated_user(self, api_client, owner):
@@ -184,10 +182,9 @@ class TestDiscussionViewSet:
         discussion.save()
         # when
         response = api_client.delete(reverse("discussions_app:discussions-detail", args=(discussion.id,)))
-        discussions_number = Discussion.objects.count()
         # then
         assert response.status_code == 401, "Status code of response must be 401"
-        assert discussions_number == 1, "There must be one discussion"
+        assert Discussion.objects.count() == 1, "The db must contain one discussion"
 
     def test_destroy_with_not_owner(self, api_client, owner, not_owner):
         # given
@@ -197,10 +194,9 @@ class TestDiscussionViewSet:
         api_client.force_authenticate(user=not_owner)
         # when
         response = api_client.delete(reverse("discussions_app:discussions-detail", args=(discussion.id,)))
-        discussions_number = Discussion.objects.count()
         # then
         assert response.status_code == 403, "Status code of response must be 403"
-        assert discussions_number == 1, "There must be one discussion"
+        assert Discussion.objects.count() == 1, "The db must contain one discussion"
 
     def test_destroy_with_owner(self, api_client, owner):
         # given
@@ -210,10 +206,9 @@ class TestDiscussionViewSet:
         api_client.force_authenticate(user=owner)
         # when
         response = api_client.delete(reverse("discussions_app:discussions-detail", args=(discussion.id,)))
-        discussions_number = Discussion.objects.count()
         # then
         assert response.status_code == 204, "Status code of response must be 204"
-        assert discussions_number == 0, "There must be no discussions"
+        assert Discussion.objects.count() == 0, "The db must contain no discussions"
 
     def test_destroy_with_admin(self, api_client, owner, admin):
         # given
@@ -223,7 +218,6 @@ class TestDiscussionViewSet:
         api_client.force_authenticate(user=admin)
         # when
         response = api_client.delete(reverse("discussions_app:discussions-detail", args=(discussion.id,)))
-        discussions_number = Discussion.objects.count()
         # then
         assert response.status_code == 204, "Status code of response must be 204"
-        assert discussions_number == 0, "There must be no discussions"
+        assert Discussion.objects.count() == 0, "The db must contain no discussions"

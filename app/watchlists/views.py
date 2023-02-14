@@ -39,6 +39,7 @@ class GetByOmdbIdView(RetrieveAPIView):
                 series = Series.objects.prefetch_related("seasons__episodes").get(imdb_id=imdb_id)
             except Series.DoesNotExist:
                 series = db_saving.save_series(imdb_id)
+                series.save()
             return series
         raise Http404
 
