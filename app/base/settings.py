@@ -1,23 +1,17 @@
 import os
 import socket
-
 from datetime import timedelta
 from pathlib import Path
 
-from celery.schedules import crontab
-
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 DEBUG = int(os.environ.get("DEBUG", default=0))
-
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
-
 INTERNAL_IPS = os.environ.get("INTERNAL_IPS").split(" ")
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -110,17 +104,14 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -158,6 +149,14 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_USE_TLS = True
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS").split(" ")
 

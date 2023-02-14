@@ -1,5 +1,5 @@
 from django.contrib.auth.password_validation import validate_password
-from rest_framework import serializers
+from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.validators import UniqueValidator
 
@@ -7,7 +7,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import User, UserProfile
-from watchlists.serializers import MovieSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -127,11 +126,9 @@ class RegisterSerializer(UserSerializer):
 
 
 class ChangePasswordSerializer(serializers.ModelSerializer):
-    new_password = serializers.CharField(
-        write_only=True, required=True, validators=[validate_password]
-    )
-    confirm_password = serializers.CharField(write_only=True, required=True)
     old_password = serializers.CharField(write_only=True, required=True)
+    new_password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    confirm_password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
@@ -161,7 +158,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
         instance.set_password(validated_data["new_password"])
         instance.save()
-        return Response("Changed")
+        return Response({'detail': 'Password was changed successfuly.'}, status=status.HTTP_200_OK)
 
 
 class UpdateProfileSerializer(serializers.ModelSerializer):
@@ -170,7 +167,7 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("email", "username")
+        fields = ("email", "username", "bio")
 
     def validate_email(self, value):
         user = self.context["request"].user
@@ -192,7 +189,7 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
         user = self.context["request"].user
         if user.id != instance.id:
             raise serializers.ValidationError(
-                {"authorize": "You only have permission to edit your account."}
+                {"authorize": "You only have permission to edit your own account."}
             )
 
         instance.email = validated_data["email"]

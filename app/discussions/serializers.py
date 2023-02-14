@@ -12,6 +12,7 @@ class DiscussionSerializer(serializers.ModelSerializer):
             'id', 'title', 'content', 'created',
             'updated', 'user', 'media'
         ]
+        read_only_fields = ['user']
 
 
 class DiscussionSerializerForRetrieve(serializers.ModelSerializer):
@@ -23,6 +24,7 @@ class DiscussionSerializerForRetrieve(serializers.ModelSerializer):
             'id', 'title', 'content', 'created',
             'updated', 'user', 'media', 'comments'
         ]
+        read_only_fields = ['user']
 
     def get_paginated_comments(self, obj):
         page_size = self.context['request'].query_params.get('size', 5)
@@ -59,6 +61,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'content', 'user', 'discussion']
+        read_only_fields = ['user']
 
 
 class CommentSerializerForUpdate(serializers.ModelSerializer):

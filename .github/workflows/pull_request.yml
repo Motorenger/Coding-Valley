@@ -6,7 +6,6 @@ on:
 jobs:
   run_tests:
     runs-on: ubuntu-latest
-    environment: development
     env:
       DEBUG: ${{ vars.DEBUG }}
       SECRET_KEY: ${{ vars.SECRET_KEY }}
@@ -49,7 +48,15 @@ jobs:
           python3 -m venv venv
           . venv/bin/activate
           pip install -r requirements.txt
-      - name: run linter and tests
+      - name: run linter
         run: |
           . venv/bin/activate
           flake8 --statistics app
+      - name: run django check
+        run: |
+          . venv/bin/activate
+          python app/manage.py check
+      - name: run tests
+        run: |
+          . venv/bin/activate
+          pytest -vv -n auto app

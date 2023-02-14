@@ -29,6 +29,7 @@ class Media(models.Model):
     # only series
     total_seasons = models.PositiveIntegerField(null=True, blank=True)
     year = models.CharField(max_length=9, help_text="Use such format: 2018-2022", null=True, blank=True)
+    seasons = models.ManyToManyField("Season")
 
     def __str__(self):
         return self.title
@@ -60,7 +61,7 @@ class Season(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     season_numb = models.PositiveIntegerField()
     total_episodes = models.PositiveIntegerField()
-    series = models.ForeignKey(Media, on_delete=models.CASCADE, related_name="seasons")
+    episodes = models.ManyToManyField("Episode")
 
     class Meta:
         verbose_name = _("Season")
@@ -68,7 +69,7 @@ class Season(models.Model):
         ordering = ["season_numb"]
 
     def __str__(self):
-        return f"{self.series} s. {self.season_numb}"
+        return f"{self.season_numb}"
 
 
 class Episode(models.Model):
@@ -79,7 +80,6 @@ class Episode(models.Model):
     runtime = models.PositiveIntegerField()
     plot = models.TextField()
     poster = models.URLField(max_length=200)
-    season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name="episodes")
     imdb_rating = models.FloatField(null=True, blank=True)
 
     class Meta:

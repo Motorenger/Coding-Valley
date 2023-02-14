@@ -77,8 +77,7 @@ class SeasonSerializer(serializers.ModelSerializer):
 
 
 class SeriesSerializer(MovieSerializer):
-    seasons = SeasonSerializer(many=True, read_only=True)
-
     class Meta:
         model = Series
-        fields = ['id', 'title', 'year', 'released', 'genres', 'plot', 'imdb_rating', 'total_seasons', "poster", "seasons", "reviews"]
+        fields = ['id', 'title', 'year', 'released', 'genres', 'plot', 'imdb_rating', 'total_seasons', "poster", "reviews", "seasons"]
+        depth = 2
