@@ -22,8 +22,8 @@ urlpatterns = [
     path('account/reset/<uidb64>/<token>', views.ResetPasswordView.as_view(), name='reset_password'),
     path('account/change_password/', views.ChangePasswordView.as_view(), name='change_password'),
     # profile
-    path('<str:username>/', views.ProfileView.as_view(), name='profile'),
-    path('<str:username>/follow/', views.FollowView.as_view(), name="follow_user"),
+    path('user/<str:username>/', views.ProfileView.as_view(), name='profile'),
+    path('user/<str:username>/follow/', views.FollowView.as_view(), name="follow_user"),
     path('<str:uuid>/save/', views.FavouritesView.as_view(), name="favourites"),
     path('profile/edit/', views.UpdateProfileView.as_view(), name='update_profile'),
 ]
