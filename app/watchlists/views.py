@@ -36,7 +36,7 @@ class GetByOmdbIdView(RetrieveAPIView):
             return movie
         elif type == "series":
             try:
-                series = Series.objects.get(imdb_id=imdb_id)
+                series = Series.objects.prefetch_related("seasons__episodes").get(imdb_id=imdb_id)
             except Series.DoesNotExist:
                 series = db_saving.save_series(imdb_id)
                 series.save()

@@ -26,6 +26,8 @@ services:
       context: .
       dockerfile: ./config/celery/Dockerfile
     command: celery -A base worker -l INFO
+    volumes:
+      - ./app/:/usr/src/app/
     env_file:
       - ./config/.env/env.dev
     volumes:
