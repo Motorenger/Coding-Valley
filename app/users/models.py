@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 from users.managers import UserManager
-from users.utils import generate_username
+from users.services.generate_username import generate_username
 from watchlists.models import Media
 
 
@@ -31,7 +31,7 @@ class User(AbstractUser):
         verbose_name_plural = _("Users")
 
     def __str__(self):
-        return self.email
+        return self.username
 
 
 class UserProfile(models.Model):
@@ -47,4 +47,4 @@ class UserProfile(models.Model):
         verbose_name_plural = _("Profiles")
 
     def __str__(self):
-        return f'{self.user.username} | {self.user.email}'
+        return f'{self.user.username}'
