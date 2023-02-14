@@ -15,6 +15,15 @@ services:
       - ./config/.env/env.prod
   redis:
     image: redis:alpine
+  celery:
+    build:
+      context: .
+      dockerfile: ./config/celery/Dockerfile
+    command: celery -A base worker -l INFO
+    env_file:
+      - ./config/.env/env.prod
+    depends_on:
+      - redis
   nginx:
     build:
       context: ./config/nginx/
