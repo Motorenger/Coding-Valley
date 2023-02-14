@@ -116,7 +116,7 @@ class ProfileView(RetrieveAPIView):
     serializer_class = UserSerializer
 
     @method_decorator(vary_on_cookie)
-    @method_decorator(cache_page(60*60*24*90, key_prefix='userprofile_cache'))
+    @method_decorator(cache_page(60*60*1, key_prefix='userprofile_cache'))
     def get(self, *args, **kwargs):
         return super().get(*args, **kwargs)
 
@@ -228,7 +228,7 @@ class ActivateEmailView(APIView):
         return Response({'detail': f'{user.email} was successfuly activated.'}, status=status.HTTP_200_OK)
 
 
-class ResetEmailView(APIView):
+class ResetSendEmailView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):

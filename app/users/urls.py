@@ -18,7 +18,7 @@ urlpatterns = [
     # account
     path('account/email/activate/', views.SendEmailView.as_view(), name='activation_link'),
     path('account/activate/<uidb64>/<token>', views.ActivateEmailView.as_view(), name='activate_email'),
-    path('account/password/reset/', views.ResetEmailView.as_view(), name='reset_link'),
+    path('account/password/reset/', views.ResetSendEmailView.as_view(), name='reset_link'),
     path('account/reset/<uidb64>/<token>', views.ResetPasswordView.as_view(), name='reset_password'),
     path('account/change_password/', views.ChangePasswordView.as_view(), name='change_password'),
     # profile
