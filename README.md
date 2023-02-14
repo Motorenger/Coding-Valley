@@ -20,7 +20,7 @@ If you are trying to use this project for the first time, you can get up and run
 
 |                          Technology                          |      Version       |
 | :----------------------------------------------------------: | :----------------: |
-|           [**django**](https://pypi.org/project/Django/)           |      **4.1.5**       |
+|           [**django**](https://pypi.org/project/Django/)           |      **4.1.6**       |
 |           [**djangorestframework**](https://pypi.org/project/djangorestframework/)           |      **3.14.0**       |
 |           [**djangorestframework-simplejwt**](https://pypi.org/project/djangorestframework-simplejwt/)           |      **5.22**       |
 |           [**django_debug_toolbar**](https://pypi.org/project/django-debug-toolbar/)           |      **3.8.1**       |
