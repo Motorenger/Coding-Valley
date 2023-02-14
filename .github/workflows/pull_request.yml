@@ -55,4 +55,4 @@ jobs:
       - name: run tests
         run: |
           . venv/bin/activate
-          pytest app
+          pytest -vv -n auto app
