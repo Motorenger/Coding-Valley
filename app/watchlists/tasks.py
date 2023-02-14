@@ -3,7 +3,7 @@ import asyncio
 import os
 
 import aiohttp
-
+from asgiref.sync import async_to_sync
 from celery import shared_task
 
 from watchlists.services import omdb_requests as req
@@ -27,23 +27,28 @@ def get_episodes(session, episodes):
     return tasks
 
 
-@shared_task
 async def download_seasons(series_data):
     async with aiohttp.ClientSession() as session:
         seasons_tasks = get_seasons(session, series_data)
         response = await asyncio.gather(*seasons_tasks)
-        seasons = []
-        for season in response:
-            seasons.append(await season.json())
+        seasons = [await season.json() for season in response]
         return seasons
 
 
-@shared_task
 async def download_episodes(episodes):
     async with aiohttp.ClientSession() as session:
         episodes_tasks = get_episodes(session, episodes)
         response = await asyncio.gather(*episodes_tasks)
         episodes = []
-        for episode in response:
-            episodes.append(await episode.json())
+        episodes = [await episode.json() for episode in response]
         return episodes
+
+
+@shared_task
+def get_season_data(series_data):
+    return asyncio.run(download_seasons(series_data))
+
+
+@shared_task
+def get_episode_data(episodes):
+    return asyncio.run(download_episodes(episodes))

@@ -4,9 +4,10 @@ import asyncio
 
 import requests
 
+
 from watchlists.services import omdb_requests as req
 from watchlists.models import Movie, Series, Season, Episode
-from watchlists.tasks import download_seasons, download_episodes
+from watchlists.tasks import get_season_data, get_episode_data
 
 
 logger = logging.getLogger(__name__)
@@ -42,10 +43,12 @@ def save_series(imdb_id):
         season and episodes and saves them too,
         returns series instance
     """
-    session = requests.Session()
-    series_data = req.get_omdb_by_omdbid(imdb_id, session)
+
+    # getting series data from imdb_api
+    series_data = req.get_omdb_by_omdbid(imdb_id)
     released = datetime.datetime.strptime(series_data['Released'], '%d %b %Y').date()
 
+    # extracting data for series
     needed_data = {}
     needed_data['title'] = series_data['Title']
     needed_data['year'] = series_data['Year']
@@ -60,24 +63,30 @@ def save_series(imdb_id):
     series = Series(**needed_data)
     series.save()
 
+    # prepare data for seasons
     series_data = (series.imdb_id, series.total_seasons)
-    seasons = asyncio.run(download_seasons(series_data))
-    s = []
+    seasons = get_season_data.delay(series_data).get()
+    seasons_all = []
 
     for season_data in seasons:
+
+        # extracting data for season
         needed_data = {}
         needed_data['season_numb'] = season_data['Season']
         needed_data['total_episodes'] = 0
 
         season = Season(**needed_data)
         season.save()
-        s.append(season)
+        seasons_all.append(season)
 
+        # prepare data for episodes
         episodes = season_data["Episodes"]
-        episodes = asyncio.run(download_episodes(episodes))
-        e = []
+        episodes = get_episode_data.delay(episodes).get()
+        episodes_all = []
 
         for episode_data in episodes:
+
+            # extracting data for episode
             needed_data = {}
             needed_data['title'] = episode_data['Title']
             needed_data['released'] = datetime.datetime.strptime(episode_data['Released'], '%d %b %Y').date()
@@ -94,16 +103,14 @@ def save_series(imdb_id):
                 needed_data['runtime'] = runtime
 
             episode = Episode(**needed_data)
-            e.append(episode)
+            episodes_all.append(episode)
 
-        Episode.objects.bulk_create(e)
-        season.total_episodes += len(e)
-        season.episodes.add(*e)
+        Episode.objects.bulk_create(episodes_all)
+        season.total_episodes += len(episodes_all)
+        season.episodes.add(*episodes_all)
 
-
-    for season in s:
-        season.save()
-    series.seasons.add(*s)
+    [season.save() for season in seasons_all]
+    series.seasons.add(*seasons_all)
     series.save()
 
     return series
