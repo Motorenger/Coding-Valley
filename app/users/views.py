@@ -25,7 +25,7 @@ from users.managers import UserManager
 from users.models import User
 from users.services.create_notification import create_notification
 from users.serializers import (ChangePasswordSerializer, RegisterSerializer,
-                               UpdateProfileSerializer, UserSerializer, 
+                               UpdateProfileSerializer, UserSerializer,
                                UserTokenObtainPairSerializer)
 from watchlists.models import Media
 
