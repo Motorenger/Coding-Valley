@@ -15,9 +15,9 @@ def review_created(sender, instance, created, **kwargs):
         Notification.objects.create(
             to_user=follower,
             created_by=instance.user,
-            notification_type="review",
+            notification_type='review',
             review=instance,
-            content=f"An review {instance.title} recently posted by {instance.user.userprofile.user}.",
+            content=f'An review {instance.title} recently posted by {instance.user.userprofile.user}.',
         )
 
 
@@ -30,7 +30,7 @@ def discussion_created(sender, instance, created, **kwargs):
         Notification.objects.create(
             to_user=follower,
             created_by=instance.user,
-            notification_type="discussion",
+            notification_type='discussion',
             discussion=instance,
-            content=f"A discussion was started by {instance.user.userprofile.user}.",
+            content=f'A discussion was started by {instance.user.userprofile.user}.',
         )

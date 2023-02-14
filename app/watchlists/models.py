@@ -9,12 +9,12 @@ from watchlists.managers import MovieManager, SeriesManager
 class Media(models.Model):
 
     class MediaTypes(models.TextChoices):
-        MOVIE = "MOVIE", "Movie"
-        SERIES = "SERIES", "Series"
+        MOVIE = 'MOVIE', 'Movie'
+        SERIES = 'SERIES', 'Series'
 
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=50)
-    released = models.DateField(_("Release date"))
+    released = models.DateField(_('Release date'))
     genres = models.CharField(max_length=255)
     poster = models.URLField(max_length=200)
     plot = models.TextField()
@@ -28,8 +28,8 @@ class Media(models.Model):
 
     # only series
     total_seasons = models.PositiveIntegerField(null=True, blank=True)
-    year = models.CharField(max_length=9, help_text="Use such format: 2018-2022", null=True, blank=True)
-    seasons = models.ManyToManyField("Season")
+    year = models.CharField(max_length=9, help_text='Use such format: 2018-2022', null=True, blank=True)
+    seasons = models.ManyToManyField('Season')
 
     def __str__(self):
         return self.title
@@ -61,15 +61,15 @@ class Season(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     season_numb = models.PositiveIntegerField()
     total_episodes = models.PositiveIntegerField()
-    episodes = models.ManyToManyField("Episode")
+    episodes = models.ManyToManyField('Episode')
 
     class Meta:
-        verbose_name = _("Season")
-        verbose_name_plural = _("Seasons")
-        ordering = ["season_numb"]
+        verbose_name = _('Season')
+        verbose_name_plural = _('Seasons')
+        ordering = ['season_numb']
 
     def __str__(self):
-        return f"{self.season_numb}"
+        return f'{self.season_numb}'
 
 
 class Episode(models.Model):
@@ -83,9 +83,9 @@ class Episode(models.Model):
     imdb_rating = models.FloatField(null=True, blank=True)
 
     class Meta:
-        verbose_name = _("Episode")
-        verbose_name_plural = _("Episodes")
-        ordering = ["episode_numb"]
+        verbose_name = _('Episode')
+        verbose_name_plural = _('Episodes')
+        ordering = ['episode_numb']
 
     def __str__(self):
         return self.title

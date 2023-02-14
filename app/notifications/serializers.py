@@ -14,22 +14,22 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notification
-        fields = "__all__"
+        fields = '__all__'
 
     def get_created_by(self, obj):
         return UserProfileSerializer(obj.created_by.userprofile, many=False).data
 
     def get_followed_by(self, obj):
-        if obj.notification_type == "follow":
+        if obj.notification_type == 'follow':
             return UserProfileSerializer(obj.followed_by.userprofile, many=False).data
         return None
 
     def get_review(self, obj):
-        if obj.notification_type == "review":
+        if obj.notification_type == 'review':
             return ReviewSerializer(obj.review, many=False).data
         return None
 
     def get_discussion(self, obj):
-        if obj.notification_type == "discussion":
+        if obj.notification_type == 'discussion':
             return DiscussionSerializer(obj.discussion, many=False).data
         return None

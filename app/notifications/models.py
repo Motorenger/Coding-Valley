@@ -8,9 +8,9 @@ from reviews.models import Review
 
 
 CHOICES = (
-    ("review", "review"),
-    ("discussion", "discussion"),
-    ("follow", "follow"),
+    ('review', 'review'),
+    ('discussion', 'discussion'),
+    ('follow', 'follow'),
 )
 
 
@@ -23,7 +23,7 @@ class Notification(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="notifications",
+        related_name='notifications',
     )
     created_by = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, null=True, blank=True
@@ -33,7 +33,7 @@ class Notification(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="followed_by",
+        related_name='followed_by',
     )
     content = models.CharField(max_length=255)
     notification_type = models.CharField(max_length=20, choices=CHOICES)

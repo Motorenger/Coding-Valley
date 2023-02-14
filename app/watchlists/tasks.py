@@ -8,7 +8,7 @@ from celery import shared_task
 def get_seasons(session, series_data):
     tasks = []
     for season_number in range(1, int(series_data[1]) + 1):
-        url = f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={series_data[0]}&Season={season_number}"
+        url = f'https://www.omdbapi.com?apikey={os.environ.get("API_KEY")}&i={series_data[0]}&Season={season_number}'
         tasks.append(session.get(url))
     return tasks
 
@@ -16,8 +16,8 @@ def get_seasons(session, series_data):
 def get_episodes(session, episodes):
     tasks = []
     for episode in episodes:
-        episode_imdb_id = episode["imdbID"]
-        url = f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={episode_imdb_id}"
+        episode_imdb_id = episode['imdbID']
+        url = f'https://www.omdbapi.com?apikey={os.environ.get("API_KEY")}&i={episode_imdb_id}'
         tasks.append(session.get(url))
     return tasks
 

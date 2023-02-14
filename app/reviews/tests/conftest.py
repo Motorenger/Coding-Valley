@@ -11,9 +11,9 @@ def api_client():
 @pytest.fixture
 def user():
     user = get_user_model().objects.create(
-        email="test_user@email.com",
-        username="test_user_name",
-        password="test_user_password"
+        email='test_user@email.com',
+        username='test_user_name',
+        password='test_user_password'
     )
     return user
 
@@ -21,9 +21,9 @@ def user():
 @pytest.fixture
 def owner():
     owner = get_user_model().objects.create(
-        email="test_owner@email.com",
-        username="test_owner_name",
-        password="test_owner_password"
+        email='test_owner@email.com',
+        username='test_owner_name',
+        password='test_owner_password'
     )
     return owner
 
@@ -31,9 +31,9 @@ def owner():
 @pytest.fixture
 def not_owner():
     not_owner = get_user_model().objects.create(
-        email="test_not_owner@email.com",
-        username="test_not_owner_name",
-        password="test_not_owner_password"
+        email='test_not_owner@email.com',
+        username='test_not_owner_name',
+        password='test_not_owner_password'
     )
     return not_owner
 
@@ -41,9 +41,9 @@ def not_owner():
 @pytest.fixture
 def admin():
     admin = get_user_model().objects.create(
-        email="test_admin@email.com",
-        username="test_admin_name",
-        password="test_admin_password",
+        email='test_admin@email.com',
+        username='test_admin_name',
+        password='test_admin_password',
         is_staff=True,
         is_superuser=True
     )

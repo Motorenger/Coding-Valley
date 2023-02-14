@@ -8,7 +8,7 @@ router = SimpleRouter()
 router.register(r'reviews', ReviewViewSet, basename='reviews')
 router.register(r'reviewlikes', ReviewLikeViewSet, basename='reviewlikes')
 
-app_name = "reviews_app"
+app_name = 'reviews_app'
 
 urlpatterns = [
     path('', include(router.urls)),

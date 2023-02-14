@@ -14,7 +14,7 @@ class User(AbstractUser):
     username = models.CharField(default=generate_username, max_length=50, unique=True)
     first_name = models.CharField(max_length=100, null=False, blank=False)
     last_name = models.CharField(max_length=100, null=False, blank=False)
-    email = models.EmailField(verbose_name="email address", max_length=255, unique=True)
+    email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
     email_verified = models.BooleanField(default=False)
@@ -23,31 +23,31 @@ class User(AbstractUser):
 
     objects = UserManager()
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name"]
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     class Meta:
-        verbose_name = _("User")
-        verbose_name_plural = _("Users")
+        verbose_name = _('User')
+        verbose_name_plural = _('Users')
 
     def __str__(self):
         return self.username
 
     def get_full_name(self):
-        return f"{self.first_name}-{self.last_name}"
+        return f'{self.first_name}-{self.last_name}'
 
 
 class UserProfile(models.Model):
     user = models.OneToOneField(
-        User, related_name="userprofile", on_delete=models.CASCADE, primary_key=True
+        User, related_name='userprofile', on_delete=models.CASCADE, primary_key=True
     )
     bio = models.TextField(default=None, null=True, blank=True)
-    followers = models.ManyToManyField(User, related_name="following", blank=True)
-    favourites = models.ManyToManyField(Media, related_name="users", blank=True)
+    followers = models.ManyToManyField(User, related_name='following', blank=True)
+    favourites = models.ManyToManyField(Media, related_name='users', blank=True)
 
     class Meta:
-        verbose_name = _("Profile")
-        verbose_name_plural = _("Profiles")
+        verbose_name = _('Profile')
+        verbose_name_plural = _('Profiles')
 
     def __str__(self):
         return f'{self.user.username}'

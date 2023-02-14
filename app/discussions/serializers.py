@@ -37,23 +37,23 @@ class DiscussionSerializerForRetrieve(serializers.ModelSerializer):
     def get_page(self, paginator, page_number, page_size, url):
         page_obj = paginator.page(page_number)
         page = {
-            "count": paginator.count,
-            "next": self.get_next_link(url, page_size, page_obj),
-            "previous": self.get_previous_link(url, page_size, page_obj),
-            "results": CommentSerializer(page_obj, many=True).data
+            'count': paginator.count,
+            'next': self.get_next_link(url, page_size, page_obj),
+            'previous': self.get_previous_link(url, page_size, page_obj),
+            'results': CommentSerializer(page_obj, many=True).data
         }
         return page
 
     @staticmethod
     def get_next_link(url, page_size, page_obj):
         if page_obj.has_next():
-            return f"{url}?size={page_size}&page={page_obj.next_page_number()}"
+            return f'{url}?size={page_size}&page={page_obj.next_page_number()}'
         return None
 
     @staticmethod
     def get_previous_link(url, page_size, page_obj):
         if page_obj.has_previous():
-            return f"{url}?size={page_size}&page={page_obj.previous_page_number()}"
+            return f'{url}?size={page_size}&page={page_obj.previous_page_number()}'
         return None
 
 
