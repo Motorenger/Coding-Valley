@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "debug_toolbar",
     "corsheaders",
+    'drf_yasg',
 
     # local
     "users.apps.UsersConfig",
