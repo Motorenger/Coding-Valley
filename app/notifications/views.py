@@ -11,10 +11,10 @@ class GetNotificationView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        if not (is_read := request.query_params.get("is_read")):
-            notifications = request.user.notifications.order_by("-created")
+        if not (is_read := request.query_params.get('is_read')):
+            notifications = request.user.notifications.order_by('-created')
         else:
-            notifications = request.user.notifications.filter(is_read=is_read).order_by("-created")
+            notifications = request.user.notifications.filter(is_read=is_read).order_by('-created')
 
         serializer = NotificationSerializer(notifications, many=True)
         return Response(serializer.data)
@@ -31,4 +31,4 @@ class ReadNotificationView(APIView):
             else:
                 return Response({'detail': 'Something went wrong, please try again.'}, status=status.HTTP_401_UNAUTHORIZED)
         except Exception as e:
-            return Response({"details": f'{e}'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'details': f'{e}'}, status=status.HTTP_204_NO_CONTENT)
