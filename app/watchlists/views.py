@@ -1,4 +1,7 @@
 from django.http import Http404
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -22,6 +25,9 @@ def search_by_search_view(request):
 
 class GetByOmdbIdView(RetrieveAPIView):
 
+    @method_decorator(cache_page(60*60*24*90, key_prefix='get_media_view'))
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
     def get_object(self):
         type = self.request.query_params.get("type")
         imdb_id = self.request.query_params.get("imdb_id")
