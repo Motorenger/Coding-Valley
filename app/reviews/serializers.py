@@ -15,6 +15,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             'created', 'stars', 'likes', 'dislikes',
             'current_user_reviewlike'
         ]
+        read_only_fields = ['user']
 
     def get_likes_number(self, obj):
         return obj.users_liked.filter(like=True).count()
@@ -49,3 +50,4 @@ class ReviewLikesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewLikes
         fields = ['id', 'review', 'user', 'like']
+        read_only_fields = ['user']

@@ -10,10 +10,9 @@ from watchlists.models import Media
 
 class Review(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews", editable=False)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews")
     title = models.CharField(max_length=150)
     content = models.TextField(null=True, blank=True)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews", editable=False)
     media = models.ForeignKey(Media, on_delete=models.CASCADE, related_name="reviews")
     created = models.DateField(auto_now_add=True)
     stars = models.IntegerField(
@@ -33,10 +32,13 @@ class Review(models.Model):
     def __str__(self):
         return self.title
 
+    def get_likes(self):
+        return self.likes.count()
+
 
 class ReviewLikes(models.Model):
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="users_liked")
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews_liked", editable=False)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="reviews_liked")
     like = models.BooleanField(default=True)
 
     class Meta:
