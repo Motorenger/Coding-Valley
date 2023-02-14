@@ -1,13 +1,8 @@
-import datetime
 import asyncio
 import os
 
 import aiohttp
-from asgiref.sync import async_to_sync
 from celery import shared_task
-
-from watchlists.services import omdb_requests as req
-from watchlists.models import Series, Season, Episode
 
 
 def get_seasons(session, series_data):

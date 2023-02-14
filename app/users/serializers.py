@@ -7,7 +7,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import User, UserProfile
-from watchlists.serializers import MovieSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):

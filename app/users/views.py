@@ -4,8 +4,7 @@ import requests
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.tokens import default_token_generator
-from django.core.files.storage import default_storage
-from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_bytes
@@ -23,13 +22,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from users.managers import UserManager
-from users.models import User, UserProfile
+from users.models import User
 from users.services.create_notification import create_notification
 from users.serializers import (ChangePasswordSerializer, RegisterSerializer,
-                               UpdateProfileSerializer, UserProfileSerializer,
-                               UserSerializer, UserTokenObtainPairSerializer)
+                               UpdateProfileSerializer, UserSerializer, 
+                               UserTokenObtainPairSerializer)
 from watchlists.models import Media
-from notifications.models import Notification
 
 
 logger = logging.getLogger(__name__)
