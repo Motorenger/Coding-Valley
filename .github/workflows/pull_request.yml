@@ -59,4 +59,8 @@ jobs:
       - name: run tests
         run: |
           . venv/bin/activate
-          pytest -vv -n auto app
+          coverage run -m pytest -vv -n auto app
+      - name: coverage report
+        run: |
+          . venv/bin/activate
+          coverage report -m
