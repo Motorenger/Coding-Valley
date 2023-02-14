@@ -1,11 +1,12 @@
 import logging
 import datetime
+import asyncio
 
 import requests
 
 from watchlists.services import omdb_requests as req
-from watchlists.models import Movie, Series
-from watchlists.tasks import download_episodes
+from watchlists.models import Movie, Series, Season, Episode
+from watchlists.tasks import download_seasons, download_episodes
 
 
 logger = logging.getLogger(__name__)
@@ -59,9 +60,50 @@ def save_series(imdb_id):
     series = Series(**needed_data)
     series.save()
 
-    try:
-        download_episodes.delay(series).get()
-    except Exception as e:
-        logger.error(f'detail: {e}')
+    series_data = (series.imdb_id, series.total_seasons)
+    seasons = asyncio.run(download_seasons(series_data))
+    s = []
+
+    for season_data in seasons:
+        needed_data = {}
+        needed_data['season_numb'] = season_data['Season']
+        needed_data['total_episodes'] = 0
+
+        season = Season(**needed_data)
+        season.save()
+        s.append(season)
+
+        episodes = season_data["Episodes"]
+        episodes = asyncio.run(download_episodes(episodes))
+        e = []
+
+        for episode_data in episodes:
+            needed_data = {}
+            needed_data['title'] = episode_data['Title']
+            needed_data['released'] = datetime.datetime.strptime(episode_data['Released'], '%d %b %Y').date()
+            needed_data['episode_numb'] = episode_data['Episode']
+            needed_data['plot'] = episode_data['Plot']
+            needed_data['poster'] = episode_data['Poster']
+
+            imdb_rating = episode_data['imdbRating']
+            if imdb_rating not in ["N/A"]:
+                needed_data['imdb_rating'] = imdb_rating
+
+            runtime = episode_data['Runtime'].split(" ")[0]
+            if runtime not in ["N/A"]:
+                needed_data['runtime'] = runtime
+
+            episode = Episode(**needed_data)
+            e.append(episode)
+
+        Episode.objects.bulk_create(e)
+        season.total_episodes += len(e)
+        season.episodes.add(*e)
+
+
+    for season in s:
+        season.save()
+    series.seasons.add(*s)
+    series.save()
 
     return series

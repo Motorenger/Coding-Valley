@@ -1,6 +1,8 @@
 import datetime
+import asyncio
+import os
 
-import requests
+import aiohttp
 
 from celery import shared_task
 
@@ -8,41 +10,40 @@ from watchlists.services import omdb_requests as req
 from watchlists.models import Series, Season, Episode
 
 
+def get_seasons(session, series_data):
+    tasks = []
+    for season_number in range(1, int(series_data[1]) + 1):
+        url = f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={series_data[0]}&Season={season_number}"
+        tasks.append(session.get(url))
+    return tasks
+
+
+def get_episodes(session, episodes):
+    tasks = []
+    for episode in episodes:
+        episode_imdb_id = episode["imdbID"]
+        url = f"https://www.omdbapi.com?apikey={os.environ.get('API_KEY')}&i={episode_imdb_id}"
+        tasks.append(session.get(url))
+    return tasks
+
+
 @shared_task
-def download_episodes(series):
-    session = requests.Session()
+async def download_seasons(series_data):
+    async with aiohttp.ClientSession() as session:
+        seasons_tasks = get_seasons(session, series_data)
+        response = await asyncio.gather(*seasons_tasks)
+        seasons = []
+        for season in response:
+            seasons.append(await season.json())
+        return seasons
 
-    for season_number in range(1, int(series.total_seasons) + 1):
-        season_data = req.get_season_by_omdbid(series.imdb_id, season_number, session)
-        needed_data = {}
-        needed_data['season_numb'] = season_data['Season']
-        needed_data['total_episodes'] = 0
-        season = Season(series=series, **needed_data)
 
+@shared_task
+async def download_episodes(episodes):
+    async with aiohttp.ClientSession() as session:
+        episodes_tasks = get_episodes(session, episodes)
+        response = await asyncio.gather(*episodes_tasks)
         episodes = []
-        for episode in season_data["Episodes"]:
-            episode_data = req.get_episode_by_omdbid(episode["imdbID"], session)
-            if not episode_data["Response"]:
-                break
-
-            needed_data = {}
-            needed_data['title'] = episode_data['Title']
-            needed_data['released'] = datetime.datetime.strptime(episode_data['Released'], '%d %b %Y').date()
-            needed_data['episode_numb'] = episode_data['Episode']
-            needed_data['plot'] = episode_data['Plot']
-            needed_data['poster'] = episode_data['Poster']
-
-            imdb_rating = episode_data['imdbRating']
-            if imdb_rating not in ["N/A"]:
-                needed_data['imdb_rating'] = imdb_rating
-
-            runtime = episode_data['Runtime'].split(" ")[0]
-            if runtime not in ["N/A"]:
-                needed_data['runtime'] = runtime
-
-            episode = Episode(season=season, **needed_data)
-            episodes.append(episode)
-        season.total_episodes += len(episodes)
-        season.save()
-        Episode.objects.bulk_create(episodes)
-    return f'Series: {series.title}'
+        for episode in response:
+            episodes.append(await episode.json())
+        return episodes

@@ -3,18 +3,17 @@ from django.contrib import admin
 from watchlists.models import Media, Season, Episode
 
 
-class EpisodeInline(admin.TabularInline):
-    model = Episode
+class SeasonInline(admin.TabularInline):
+    model = Media.seasons.through
 
 
-class SeasonAdmin(admin.ModelAdmin):
+class MediaAdmin(admin.ModelAdmin):
+    exclude = ('seasons',)
     inlines = [
-        EpisodeInline,
+        SeasonInline,
     ]
 
 
+admin.site.register(Season)
 admin.site.register(Episode)
-admin.site.register(Season, SeasonAdmin)
-
-
-admin.site.register(Media)
+admin.site.register(Media, MediaAdmin)
