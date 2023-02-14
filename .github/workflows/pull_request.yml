@@ -52,6 +52,10 @@ jobs:
         run: |
           . venv/bin/activate
           flake8 --statistics app
+      - name: run django check
+        run: |
+          . venv/bin/activate
+          python app/manage.py check
       - name: run tests
         run: |
           . venv/bin/activate

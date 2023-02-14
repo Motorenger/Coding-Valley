@@ -28,6 +28,7 @@ class GetByOmdbIdView(RetrieveAPIView):
     @method_decorator(cache_page(60*60*24*90, key_prefix='get_media_view'))
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
     def get_object(self):
         type = self.request.query_params.get("type")
         imdb_id = self.request.query_params.get("imdb_id")
