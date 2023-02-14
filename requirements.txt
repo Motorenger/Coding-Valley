@@ -17,3 +17,4 @@ celery==5.2.7
 django-redis==5.2.0
 aiohttp==3.8.4
 asgiref
+coverage==7.1.0
