@@ -18,7 +18,7 @@ class TestChangePasswordView:
         }
         api_client.force_authenticate(user=registered_user)
         # when
-        response = api_client.put(reverse("users_app:auth_change_password"), user_data_for_changing_password)
+        response = api_client.put(reverse("users_app:change_password"), user_data_for_changing_password)
         # then
         assert response.status_code == 200, "Status code of response must be 200"
         assert not check_password(old_password, registered_user.password), "The currect user password must not be equal to the old password"
@@ -30,7 +30,7 @@ class TestChangePasswordView:
         user_data_for_changing_password = {}
         api_client.force_authenticate(user=registered_user)
         # when
-        response = api_client.put(reverse("users_app:auth_change_password"), user_data_for_changing_password)
+        response = api_client.put(reverse("users_app:change_password"), user_data_for_changing_password)
         # then
         assert response.status_code == 400, "Status code of response must be 400"
         assert check_password(old_password, registered_user.password), "The currect user password must be equal to the old password"
@@ -50,7 +50,7 @@ class TestChangePasswordView:
         ]
         api_client.force_authenticate(user=registered_user)
         # when
-        response = api_client.put(reverse("users_app:auth_change_password"), user_data_for_changing_password)
+        response = api_client.put(reverse("users_app:change_password"), user_data_for_changing_password)
         # then
         assert response.status_code == 400, "Status code of response must be 400"
         assert response.json().get("new_password") == expected_error_message, f"The response must contain {expected_error_message} for 'new_password' field"
@@ -72,7 +72,7 @@ class TestChangePasswordView:
         }
         api_client.force_authenticate(user=registered_user)
         # when
-        response = api_client.put(reverse("users_app:auth_change_password"), user_data_for_changing_password)
+        response = api_client.put(reverse("users_app:change_password"), user_data_for_changing_password)
         # then
         assert response.status_code == 400, "Status code of response must be 400"
         assert response.json().get("old_password") == expected_error_message, f"The response must contain {expected_error_message} for 'old_password' field"
@@ -92,7 +92,7 @@ class TestChangePasswordView:
         expected_error_message = ["Password fields didn't match."]
         api_client.force_authenticate(user=registered_user)
         # when
-        response = api_client.put(reverse("users_app:auth_change_password"), user_data_for_changing_password)
+        response = api_client.put(reverse("users_app:change_password"), user_data_for_changing_password)
         # then
         assert response.status_code == 400, "Status code of response must be 400"
         assert response.json().get("password") == expected_error_message, f"The response must contain {expected_error_message} for 'password' field"
@@ -110,7 +110,7 @@ class TestChangePasswordView:
             "confirm_password": new_password
         }
         # when
-        response = api_client.put(reverse("users_app:auth_change_password"), user_data_for_changing_password)
+        response = api_client.put(reverse("users_app:change_password"), user_data_for_changing_password)
         # then
         assert response.status_code == 401, "Status code of response must be 401"
         assert check_password(old_password, registered_user.password), "The currect user password must be equal to the old password"
@@ -118,7 +118,7 @@ class TestChangePasswordView:
 
     def test_get_with_unauthenticated_user(self, api_client):
         # when
-        response = api_client.get(reverse("users_app:auth_change_password"))
+        response = api_client.get(reverse("users_app:change_password"))
         # then
         assert response.status_code == 401, "Status code of response must be 401"
 
@@ -126,7 +126,7 @@ class TestChangePasswordView:
         # given
         api_client.force_authenticate(user=registered_user)
         # when
-        response = api_client.get(reverse("users_app:auth_change_password"))
+        response = api_client.get(reverse("users_app:change_password"))
         # then
         assert response.status_code == 405, "Status code of response must be 405"
 
@@ -134,7 +134,7 @@ class TestChangePasswordView:
         # given
         api_client.force_authenticate(user=registered_user)
         # when
-        response = api_client.post(reverse("users_app:auth_change_password"))
+        response = api_client.post(reverse("users_app:change_password"))
         # then
         assert response.status_code == 405, "Status code of response must be 405"
 
@@ -142,6 +142,6 @@ class TestChangePasswordView:
         # given
         api_client.force_authenticate(user=registered_user)
         # when
-        response = api_client.delete(reverse("users_app:auth_change_password"))
+        response = api_client.delete(reverse("users_app:change_password"))
         # then
         assert response.status_code == 405, "Status code of response must be 405"
