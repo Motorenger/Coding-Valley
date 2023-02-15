@@ -5,7 +5,7 @@
 <h1>Welcome to the Coding Valley Api Repository</h1>
 
 <a href="https://codingvalley.tech/login/"><img src="https://img.shields.io/badge/Coddng%20Valley-API-orange?style=for-the-badge?style=for-the-badge&logo=appveyor)" height="25px"></a>
-<a href="https://igorkaruna.github.io/codingvalley/"><img src="https://img.shields.io/badge/Codng%20Valley-Documentation-green?style=for-the-badge?style=for-the-badge&logo=appveyor)" height="25px"></a>
+<a href="https://nvkuntsevych.github.io/codingvalley-documentation/"><img src="https://img.shields.io/badge/Codng%20Valley-Documentation-green?style=for-the-badge?style=for-the-badge&logo=appveyor)" height="25px"></a>
 
 **LIVE DEMO: https://codingvalley.tech/login/**
 </div>
