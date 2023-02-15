@@ -13,6 +13,12 @@
 
 <br/>
 
+
+## SQL Diagram
+
+![drawSQL-coding-valley-export-2023-02-15](https://user-images.githubusercontent.com/88438873/219054988-00067110-5d1f-4af7-9ba5-ee90f712471c.png)
+
+
 ## Getting Started 
 
 If you are trying to use this project for the first time, you can get up and running by following these steps.
