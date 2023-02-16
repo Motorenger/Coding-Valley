@@ -68,16 +68,24 @@ class SeasonSerializer(serializers.ModelSerializer):
         fields = ['season_numb', 'total_episodes', 'episodes']
 
     def get_episodes(self, instance):
-        imdb_rating = self.context['imdb_rating']
+        print(self.context)
+        imdb_rating = self.context["imdb_rating"]
         if imdb_rating is not None:
-            episodes = instance.episodes.filter(imdb_rating__gte=imdb_rating)
+            episodes = instance.episodes.all().filter(imdb_rating__gte=imdb_rating)
         else:
             episodes = instance.episodes.all()
         return EpisodeSerializer(episodes, many=True).data
 
 
 class SeriesSerializer(MovieSerializer):
+    seasons = serializers.SerializerMethodField()
+
     class Meta:
         model = Series
-        fields = ['id', 'title', 'year', 'released', 'genres', 'plot', 'imdb_rating', 'total_seasons', 'poster', 'reviews', 'seasons']
-        depth = 2
+        fields = ['id', 'title', 'year', 'released', 'genres', 'plot', 'imdb_rating', 'total_seasons', "poster", "reviews", "seasons"]
+        depth = 1
+
+    def get_seasons(self, instance):
+        seasons = instance.seasons.all()
+
+        return SeasonSerializer(seasons, many=True, context=self.context).data
