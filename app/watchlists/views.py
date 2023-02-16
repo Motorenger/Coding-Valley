@@ -25,9 +25,9 @@ def search_by_search_view(request):
 
 class GetByOmdbIdView(RetrieveAPIView):
 
-    @method_decorator(cache_page(60*60*24*90, key_prefix='get_media_view'))
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+    # @method_decorator(cache_page(60*60*24*90, key_prefix='get_media_view'))
+    # def get(self, request, *args, **kwargs):
+    #     return super().get(request, *args, **kwargs)
 
     def get_object(self):
         type = self.request.query_params.get("type")
@@ -62,6 +62,7 @@ class GetByOmdbIdView(RetrieveAPIView):
         imdb_rating = validate_imdb_rating(self.request.query_params.get("imdb_rating", None))
         context["imdb_rating"] = imdb_rating
         context["request"] = self.request
+        print(context)
         return context
 
 
