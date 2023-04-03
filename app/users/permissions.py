@@ -18,7 +18,7 @@ class IsOwnerOrIsAdminOrReadOnly(permissions.BasePermission):
         return obj.user == request.user or request.user.is_superuser
 
 
-class VerifiedEmail(IsOwnerOrIsAdminOrReadOnly):
+class EmailVerified(IsOwnerOrIsAdminOrReadOnly):
     def has_permission(self, request, view):
         """Object can be created only by user whose email was verified"""
         return request.user.email_vierified
